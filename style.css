@@ -1,0 +1,23 @@
+.nav-links a[href="login.html"]{
+    border:1px solid #22d3ee;
+    padding:8px 18px;
+    border-radius:8px;
+    color:#22d3ee;
+}
+
+.nav-links a[href="login.html"]:hover{
+    background:#22d3ee;
+    color:#000;
+}.login-btn{
+    border:1px solid #22d3ee;
+    padding:10px 20px;
+    border-radius:8px;
+    color:#22d3ee !important;
+    text-decoration:none;
+    transition:0.3s;
+}
+
+.login-btn:hover{
+    background:#22d3ee;
+    color:black !important;
+}
