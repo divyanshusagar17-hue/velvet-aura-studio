@@ -47,3 +47,12 @@
         margin-bottom: 10px;
     }
 }
+nav{
+    display:block !important;
+    visibility:visible !important;
+}
+
+.nav-links{
+    display:flex !important;
+    visibility:visible !important;
+}
