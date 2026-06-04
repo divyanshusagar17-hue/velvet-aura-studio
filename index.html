@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head><link rel="stylesheet" href="style.css">
+   <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -33,15 +34,15 @@ margin:auto;
 /* NAVBAR */
 
 nav{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-padding:20px 0;
-background:rgba(15,23,42,0.95);
-backdrop-filter:blur(10px);
-z-index:1000;
-border-bottom:1px solid rgba(255,255,255,0.05);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px 0;
+    background: rgba(15,23,42,0.95);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
 .nav-container{
@@ -365,7 +366,7 @@ margin-top:15px;
 
 <section class="hero container" id="home">
 
-<div class="hero-content">
+<div class="hero-content"> 
 
 <div class="badge">
 Available For Freelance Work
@@ -562,5 +563,13 @@ Send Email
 © 2026 velvet aura studio. All Rights Reserved.
 </footer>
 
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+
+<script>
+AOS.init({
+    duration: 1000,
+    once: true
+});
+</script>
 </body>
 </html>

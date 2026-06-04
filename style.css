@@ -16,7 +16,6 @@
     text-decoration:none;
     transition:0.3s;
 }
-
 .login-btn:hover{
     background:#22d3ee;
     color:black !important;
@@ -55,4 +54,129 @@ nav{
 .nav-links{
     display:flex !important;
     visibility:visible !important;
+}
+/* =========================
+   ANIMATIONS & EFFECTS
+========================= */
+
+/* Hero Text Animation */
+
+.hero-content{
+    animation: fadeIn 1.2s ease;
+}
+
+@keyframes fadeIn{
+    from{
+        opacity:0;
+        transform:translateY(40px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+/* Hero Image Floating */
+
+.hero-image img{
+    animation: float 4s ease-in-out infinite;
+}
+
+@keyframes float{
+    0%{
+        transform:translateY(0);
+    }
+    50%{
+        transform:translateY(-15px);
+    }
+    100%{
+        transform:translateY(0);
+    }
+}
+
+/* Button Hover Effect */
+
+.btn,
+.btn-primary,
+.btn-secondary{
+    transition:all 0.3s ease;
+}
+
+.btn:hover,
+.btn-primary:hover,
+.btn-secondary:hover{
+    transform:translateY(-4px);
+}
+
+/* Skill & Project Cards Hover */
+
+.skill-card,
+.project-card{
+    transition:all 0.4s ease;
+}
+
+.skill-card:hover,
+.project-card:hover{
+    transform:translateY(-10px);
+    box-shadow:0 10px 30px rgba(34,211,238,0.25);
+}
+
+/* Navbar Links Hover */
+
+.nav-links a{
+    transition:0.3s;
+}
+
+.nav-links a:hover{
+    color:#22d3ee;
+}
+
+/* Logo Glow */
+
+.logo{
+    transition:0.3s;
+}
+
+.logo:hover{
+    text-shadow:0 0 15px #22d3ee;
+}
+
+/* Section Titles */
+
+.section-title{
+    animation: fadeUp 1s ease;
+}
+
+@keyframes fadeUp{
+    from{
+        opacity:0;
+        transform:translateY(30px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+/* Login Button Animation */
+
+.login-btn{
+    border:1px solid #22d3ee;
+    padding:10px 20px;
+    border-radius:8px;
+    color:#22d3ee !important;
+    text-decoration:none;
+    transition:0.3s;
+}
+
+.login-btn:hover{
+    background:#22d3ee;
+    color:#000 !important;
+    transform:translateY(-3px);
+}
+
+/* Smooth Scroll */
+
+html{
+    scroll-behavior:smooth;
 }
