@@ -49,11 +49,10 @@ if (loginForm) {
     const password = document.getElementById("loginPassword").value;
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      alert("Login Successful!");
-      window.location.href = "index.html";
-    } catch (error) {
-      alert(error.message);
-    }
-  });
+  await signInWithEmailAndPassword(auth, email, password);
+  alert("Login Successful!");
+  window.location.href = "index.html";
+} catch (error) {
+  console.log(error);
+  alert(error.code);
 }

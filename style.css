@@ -1,214 +1,69 @@
-.nav-links a[href="login.html"]{
-    border:1px solid #22d3ee;
-    padding:8px 18px;
-    border-radius:8px;
-    color:#22d3ee;
-}
+const text = ["Web Developer", "Frontend Developer", "Freelancer"];
+let i = 0;
+let j = 0;
+let current = "";
 
-.nav-links a[href="login.html"]:hover{
-    background:#22d3ee;
-    color:#000;
-}.login-btn{
-    border:1px solid #22d3ee;
-    padding:10px 20px;
-    border-radius:8px;
-    color:#22d3ee !important;
-    text-decoration:none;
-    transition:0.3s;
-}
-.login-btn:hover{
-    background:#22d3ee;
-    color:black !important;
-}
+const typingElement = document.getElementById("typing");
 
-/* Mobile Responsive Navbar */
-@media (max-width: 768px) {
+function type() {
+    if (!typingElement) return;
 
-    .nav-container {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    .nav-links {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 10px;
-        margin-top: 10px;
-    }
-
-    .nav-links a {
-        font-size: 14px;
-        padding: 5px;
-    }
-
-    .logo {
-        margin-bottom: 10px;
-    }
-}
-nav{
-    display:block !important;
-    visibility:visible !important;
-}
-
-.nav-links{
-    display:flex !important;
-    visibility:visible !important;
-}
-/* =========================
-   ANIMATIONS & EFFECTS
-========================= */
-
-/* Hero Text Animation */
-
-.hero-content{
-    animation: fadeIn 1.2s ease;
-}
-
-@keyframes fadeIn{
-    from{
-        opacity:0;
-        transform:translateY(40px);
-    }
-    to{
-        opacity:1;
-        transform:translateY(0);
+    if (j < text[i].length) {
+        current += text[i][j];
+        typingElement.textContent = current;
+        j++;
+        setTimeout(type, 100);
+    } else {
+        setTimeout(() => {
+            current = "";
+            j = 0;
+            i = (i + 1) % text.length;
+            type();
+        }, 1500);
     }
 }
 
-/* Hero Image Floating */
+type();
 
-.hero-image img{
-    animation: float 4s ease-in-out infinite;
+const logo = document.querySelector(".logo");
+
+if (logo) {
+    let clicks = 0;
+
+    logo.addEventListener("click", () => {
+        clicks++;
+
+        if (clicks === 5) {
+            alert("🎉 Secret Mode Activated!");
+            clicks = 0;
+        }
+    });
 }
 
-@keyframes float{
-    0%{
-        transform:translateY(0);
-    }
-    50%{
-        transform:translateY(-15px);
-    }
-    100%{
-        transform:translateY(0);
-    }
+const glow = document.querySelector(".cursor-glow");
+
+if (glow) {
+    document.addEventListener("mousemove", (e) => {
+        glow.style.left = e.clientX + "px";
+        glow.style.top = e.clientY + "px";
+    });
 }
 
-/* Button Hover Effect */
+const music = document.getElementById("bgMusic");
+const musicBtn = document.getElementById("musicBtn");
 
-.btn,
-.btn-primary,
-.btn-secondary{
-    transition:all 0.3s ease;
-}
-
-.btn:hover,
-.btn-primary:hover,
-.btn-secondary:hover{
-    transform:translateY(-4px);
-}
-
-/* Skill & Project Cards Hover */
-
-.skill-card,
-.project-card{
-    transition:all 0.4s ease;
-}
-
-.skill-card:hover,
-.project-card:hover{
-    transform:translateY(-10px);
-    box-shadow:0 10px 30px rgba(34,211,238,0.25);
-}
-
-/* Navbar Links Hover */
-
-.nav-links a{
-    transition:0.3s;
-}
-
-.nav-links a:hover{
-    color:#22d3ee;
-}
-
-/* Logo Glow */
-
-.logo{
-    transition:0.3s;
-}
-
-.logo:hover{
-    text-shadow:0 0 15px #22d3ee;
-}
-
-/* Section Titles */
-
-.section-title{
-    animation: fadeUp 1s ease;
-}
-
-@keyframes fadeUp{
-    from{
-        opacity:0;
-        transform:translateY(30px);
-    }
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
-}
-
-/* Login Button Animation */
-
-.login-btn{
-    border:1px solid #22d3ee;
-    padding:10px 20px;
-    border-radius:8px;
-    color:#22d3ee !important;
-    text-decoration:none;
-    transition:0.3s;
-}
-
-.login-btn:hover{
-    background:#22d3ee;
-    color:#000 !important;
-    transform:translateY(-3px);
-}
-
-/* Smooth Scroll */
-
-html{
-    scroll-behavior:smooth;
-}
-.cursor-glow{
-    width:300px;
-    height:300px;
-    background:rgba(34,211,238,0.15);
-    border-radius:50%;
-    position:fixed;
-    pointer-events:none;
-    transform:translate(-50%,-50%);
-    filter:blur(80px);
-    z-index:-1;
-}
-.hero h1 span{
-    color:#22d3ee;
-    text-shadow:0 0 20px rgba(34,211,238,.6);
-}
-#musicBtn{
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: #22d3ee;
-    color: #000;
-    border: none;
-    padding: 12px 18px;
-    border-radius: 30px;
-    cursor: pointer;
-    font-weight: bold;
-    z-index: 1000;
-}
-
-#musicBtn:hover{
-    transform: scale(1.05);
+if (music && musicBtn) {
+    musicBtn.addEventListener("click", async () => {
+        try {
+            if (music.paused) {
+                await music.play();
+                musicBtn.innerHTML = "🔇 Stop Music";
+            } else {
+                music.pause();
+                musicBtn.innerHTML = "🎵 Play Music";
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    });
 }

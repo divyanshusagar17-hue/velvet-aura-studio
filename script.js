@@ -3,50 +3,74 @@ let i = 0;
 let j = 0;
 let current = "";
 
+const typingElement = document.getElementById("typing");
+
 function type() {
-  if (j < text[i].length) {
-    current += text[i][j];
-    document.getElementById("typing").innerHTML = current;
-    j++;
-    setTimeout(type, 100);
-  } else {
-    setTimeout(() => {
-      current = "";
-      j = 0;
-      i = (i + 1) % text.length;
-      type();
-    }, 1500);
-  }
+    if (!typingElement) return;
+
+    if (j < text[i].length) {
+        current += text[i][j];
+        typingElement.innerHTML = current;
+        j++;
+
+        setTimeout(type, 100);
+    } else {
+        setTimeout(() => {
+            current = "";
+            j = 0;
+            i = (i + 1) % text.length;
+            type();
+        }, 1500);
+    }
 }
 
-type();
-let clicks = 0;
+if (typingElement) {
+    type();
+}
 
-document.querySelector(".logo").addEventListener("click", () => {
-    clicks++;
+// Secret Logo Click
 
-    if(clicks === 5){
-        alert("🎉 Secret Mode Activated!");
-        clicks = 0;
-    }
-});
+const logo = document.querySelector(".logo");
+
+if (logo) {
+    let clicks = 0;
+
+    logo.addEventListener("click", () => {
+        clicks++;
+
+        if (clicks === 5) {
+            alert("🎉 Secret Mode Activated!");
+            clicks = 0;
+        }
+    });
+}
+
+// Cursor Glow
+
 const glow = document.querySelector(".cursor-glow");
 
-document.addEventListener("mousemove", (e)=>{
-    glow.style.left = e.clientX + "px";
-    glow.style.top = e.clientY + "px";
-});
+if (glow) {
+    document.addEventListener("mousemove", (e) => {
+        glow.style.left = e.clientX + "px";
+        glow.style.top = e.clientY + "px";
+    });
+}
+
+// Music
+
 const music = document.getElementById("bgMusic");
 const musicBtn = document.getElementById("musicBtn");
 
-musicBtn.addEventListener("click", () => {
+if (music && musicBtn) {
+    musicBtn.addEventListener("click", () => {
 
-    if (music.paused) {
-        music.play();
-        musicBtn.innerHTML = "🔇 Stop Music";
-    } else {
-        music.pause();
-        musicBtn.innerHTML = "🎵 Play Music";
-    }
+        if (music.paused) {
+            music.play();
+            musicBtn.innerHTML = "🔇 Stop Music";
+        } else {
+            music.pause();
+            musicBtn.innerHTML = "🎵 Play Music";
+        }
 
-});
+    });
+}
