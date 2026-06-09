@@ -64,15 +64,6 @@ a{
 color:#22d3ee;
 text-decoration:none;
 }
-<style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-}
-
-/* YAHAN PASTE KARO */
 
 .back-btn{
 display:inline-block;
@@ -80,15 +71,12 @@ margin-bottom:20px;
 padding:8px 15px;
 border:1px solid #22d3ee;
 border-radius:8px;
-text-decoration:none;
-color:#22d3ee;
 }
 
 .back-btn:hover{
 background:#22d3ee;
 color:black;
 }
-
 </style>
 
 </head>
@@ -100,11 +88,14 @@ color:black;
 
 <h2>Login</h2>
 
-<form>
-<input type="email" placeholder="Email" required>
-<input type="password" placeholder="Password" required>
+<form id="loginForm">
+
+<input type="email" id="loginEmail" placeholder="Email" required>
+
+<input type="password" id="loginPassword" placeholder="Password" required>
 
 <button type="submit">Login</button>
+
 </form>
 
 <p>
@@ -113,6 +104,8 @@ Don't have an account?
 </p>
 
 </div>
+
+<script type="module" src="firebase-auth.js"></script>
 
 </body>
 </html>
