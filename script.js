@@ -1,33 +1,3 @@
-const text = ["Web Developer", "Frontend Developer", "Freelancer"];
-let i = 0;
-let j = 0;
-let current = "";
-
-const typingElement = document.getElementById("typing");
-
-function type() {
-    if (!typingElement) return;
-
-    if (j < text[i].length) {
-        current += text[i][j];
-        typingElement.innerHTML = current;
-        j++;
-
-        setTimeout(type, 100);
-    } else {
-        setTimeout(() => {
-            current = "";
-            j = 0;
-            i = (i + 1) % text.length;
-            type();
-        }, 1500);
-    }
-}
-
-if (typingElement) {
-    type();
-}
-
 // Secret Logo Click
 
 const logo = document.querySelector(".logo");

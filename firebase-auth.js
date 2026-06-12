@@ -2,7 +2,9 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/fireba
 import {
   getAuth,
   createUserWithEmailAndPassword,
-  signInWithEmailAndPassword
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const firebaseConfig = {
@@ -18,7 +20,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// Signup
+// SIGNUP
 const signupForm = document.getElementById("signupForm");
 
 if (signupForm) {
@@ -33,12 +35,13 @@ if (signupForm) {
       alert("Signup Successful!");
       window.location.href = "login.html";
     } catch (error) {
-      alert(error.message);
+      alert(error.code + " : " + error.message);
+      console.error(error);
     }
   });
 }
 
-// Login
+// LOGIN
 const loginForm = document.getElementById("loginForm");
 
 if (loginForm) {
@@ -49,10 +52,55 @@ if (loginForm) {
     const password = document.getElementById("loginPassword").value;
 
     try {
-  await signInWithEmailAndPassword(auth, email, password);
-  alert("Login Successful!");
-  window.location.href = "index.html";
-} catch (error) {
-  console.log(error);
-  alert(error.code);
+      await signInWithEmailAndPassword(auth, email, password);
+      alert("Login Successful!");
+      window.location.href = "index.html";
+    } catch (error) {
+      alert(error.code + " : " + error.message);
+      console.error(error);
+    }
+  });
+}
+
+// Login Status Check
+
+onAuthStateChanged(auth, (user) => {
+
+  const loginBtn = document.getElementById("loginBtn");
+  const logoutBtn = document.getElementById("logoutBtn");
+
+  if (user) {
+
+    if (loginBtn) loginBtn.style.display = "none";
+    if (logoutBtn) logoutBtn.style.display = "inline-block";
+
+    if (window.location.pathname.includes("login.html")) {
+      window.location.href = "index.html";
+    }
+
+  } else {
+
+    if (loginBtn) loginBtn.style.display = "inline-block";
+    if (logoutBtn) logoutBtn.style.display = "none";
+
+  }
+
+});
+
+// Logout
+
+const logoutBtn = document.getElementById("logoutBtn");
+
+if (logoutBtn) {
+
+  logoutBtn.addEventListener("click", async () => {
+
+    await signOut(auth);
+
+    alert("Logged Out");
+
+    window.location.href = "login.html";
+
+  });
+
 }
