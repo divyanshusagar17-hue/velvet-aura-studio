@@ -1,6 +1,6 @@
 // Secret Logo Click
 
-const logo = document.querySelector(".logo");
+ logo = document.querySelector(".logo");
 
 if (logo) {
     let clicks = 0;
@@ -17,7 +17,7 @@ if (logo) {
 
 // Cursor Glow
 
-const glow = document.querySelector(".cursor-glow");
+ glow = document.querySelector(".cursor-glow");
 
 if (glow) {
     document.addEventListener("mousemove", (e) => {

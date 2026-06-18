@@ -1,4 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -6,6 +7,13 @@ import {
   onAuthStateChanged,
   signOut
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  getDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCZWkXq52l7C-GI0lDHoShOpKbEIxwzct0",
@@ -19,29 +27,48 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app);
 
 // SIGNUP
+
 const signupForm = document.getElementById("signupForm");
 
 if (signupForm) {
   signupForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
+    const name = document.getElementById("name").value;
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
 
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      await setDoc(doc(db, "users", userCredential.user.uid), {
+        name: name,
+        email: email,
+        profileCompleted: false
+      });
+
       alert("Signup Successful!");
       window.location.href = "login.html";
+
     } catch (error) {
+
       alert(error.code + " : " + error.message);
       console.error(error);
+
     }
   });
 }
 
 // LOGIN
+
 const loginForm = document.getElementById("loginForm");
 
 if (loginForm) {
@@ -52,17 +79,37 @@ if (loginForm) {
     const password = document.getElementById("loginPassword").value;
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      alert("Login Successful!");
-      window.location.href = "index.html";
+
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      const userDoc = await getDoc(
+        doc(db, "users", userCredential.user.uid)
+      );
+
+      if (userDoc.exists() && !userDoc.data().profileCompleted) {
+
+        window.location.href = "complete-profile.html";
+
+      } else {
+
+        window.location.href = "index.html";
+
+      }
+
     } catch (error) {
+
       alert(error.code + " : " + error.message);
       console.error(error);
+
     }
   });
 }
 
-// Login Status Check
+// LOGIN STATUS CHECK
 
 onAuthStateChanged(auth, (user) => {
 
@@ -74,10 +121,6 @@ onAuthStateChanged(auth, (user) => {
     if (loginBtn) loginBtn.style.display = "none";
     if (logoutBtn) logoutBtn.style.display = "inline-block";
 
-    if (window.location.pathname.includes("login.html")) {
-      window.location.href = "index.html";
-    }
-
   } else {
 
     if (loginBtn) loginBtn.style.display = "inline-block";
@@ -87,7 +130,7 @@ onAuthStateChanged(auth, (user) => {
 
 });
 
-// Logout
+// LOGOUT
 
 const logoutBtn = document.getElementById("logoutBtn");
 
