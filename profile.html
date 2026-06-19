@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile</title>
+
+  <style>
+    body {
+      background: #08122d;
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    .profile-card {
+      background: #101b3b;
+      padding: 30px;
+      border-radius: 16px;
+      width: 350px;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(0,255,255,0.15);
+    }
+
+    h2 {
+      color: #00d9ff;
+      margin-bottom: 20px;
+    }
+
+    p {
+      margin: 15px 0;
+      font-size: 18px;
+    }
+
+    span {
+      color: #00d9ff;
+    }
+
+    .btn {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 24px;
+      background: #00d9ff;
+      color: #08122d;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="profile-card">
+    <h2>My Profile</h2>
+
+<p><strong>Name:</strong> <span id="profileName">Loading...</span></p>
+
+<p><strong>Email:</strong> <span id="profileEmail">Loading...</span></p>
+
+<p><strong>City:</strong> <span id="profileCity">Loading...</span></p>
+
+<p><strong>College:</strong> <span id="profileCollege">Loading...</span></p>
+
+<button id="editBtn" class="btn">Edit Profile</button>
+
+<form id="editForm" style="display: none; margin-top: 20px;">
+
+  <input type="text" id="editName" placeholder="Full Name" required>
+
+  <input type="text" id="editCity" placeholder="City" required>
+
+  <input type="text" id="editCollege" placeholder="College Name" required>
+
+  <button type="submit" class="btn">Save Changes</button>
+
+</form>
+
+<br><br>
+
+    <a href="index.html" class="btn">Back to Home</a>
+  </div>
+
+  <script type="module" src="profile.js"></script>
+
+</body>
+</html>
