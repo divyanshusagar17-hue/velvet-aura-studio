@@ -25,22 +25,3 @@ if (glow) {
         glow.style.top = e.clientY + "px";
     });
 }
-
-// Music
-
-const music = document.getElementById("bgMusic");
-const musicBtn = document.getElementById("musicBtn");
-
-if (music && musicBtn) {
-    musicBtn.addEventListener("click", () => {
-
-        if (music.paused) {
-            music.play();
-            musicBtn.innerHTML = "🔇 Stop Music";
-        } else {
-            music.pause();
-            musicBtn.innerHTML = "🎵 Play Music";
-        }
-
-    });
-}

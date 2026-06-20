@@ -48,22 +48,3 @@ if (glow) {
         glow.style.top = e.clientY + "px";
     });
 }
-
-const music = document.getElementById("bgMusic");
-const musicBtn = document.getElementById("musicBtn");
-
-if (music && musicBtn) {
-    musicBtn.addEventListener("click", async () => {
-        try {
-            if (music.paused) {
-                await music.play();
-                musicBtn.innerHTML = "🔇 Stop Music";
-            } else {
-                music.pause();
-                musicBtn.innerHTML = "🎵 Play Music";
-            }
-        } catch (err) {
-            console.error(err);
-        }
-    });
-}
