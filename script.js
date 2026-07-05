@@ -1,6 +1,6 @@
 // Secret Logo Click
 
- logo = document.querySelector(".logo");
+const logo = document.querySelector(".logo");
 
 if (logo) {
     let clicks = 0;
@@ -17,7 +17,7 @@ if (logo) {
 
 // Cursor Glow
 
- glow = document.querySelector(".cursor-glow");
+const glow = document.querySelector(".cursor-glow");
 
 if (glow) {
     document.addEventListener("mousemove", (e) => {
@@ -25,3 +25,5 @@ if (glow) {
         glow.style.top = e.clientY + "px";
     });
 }
+
+console.log("Sidebar JS Loaded");

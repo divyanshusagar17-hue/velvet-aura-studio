@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head><link rel="stylesheet" href="style.css">
+<head>
    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -304,39 +304,155 @@ border-top:1px solid rgba(255,255,255,0.05);
 color:#94a3b8;
 }
 
+/* MENU BUTTON */
+
+.menu-btn{
+    font-size: 30px;
+    color: #22d3ee;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    box-shadow: none;
+    line-height: 1;
+    margin: 0;
+    z-index: 2001;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+    position:fixed;
+    top:0;
+    left:-300px;
+    width:min(280px, 82vw);
+    height:100%;
+    background:#111827;
+    padding:74px 20px 24px;
+    transition:.35s ease;
+    z-index:2000;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+}
+
+.sidebar.active{
+    left:0;
+}
+
+.sidebar a{
+    color:white;
+    text-decoration:none;
+    font-size:18px;
+    transition:.3s;
+}
+
+.sidebar a:hover{
+    color:#22d3ee;
+    padding-left:10px;
+}
+
+/* OVERLAY */
+
+.overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.5);
+    opacity:0;
+    visibility:hidden;
+    transition:.3s;
+    z-index:1500;
+}
+
+.overlay.active{
+    opacity:1;
+    visibility:visible;
+}
+
 /* MOBILE */
 
-@media(max-width:900px){
+@media (max-width:900px){
+
+section{
+    padding: 70px 0;
+}
 
 .hero{
-flex-direction:column;
-text-align:center;
-padding-top:200px;
+    flex-direction: column;
+    text-align: center;
+    padding-top: 90px;
+    gap: 24px;
 }
 
 .hero h1{
-font-size:2.8rem;
+    font-size: 2.3rem;
+    margin-bottom: 12px;
+}
+
+.hero p{
+    font-size: 1rem;
+    margin-bottom: 20px;
 }
 
 .hero-buttons{
-justify-content:center;
+    justify-content:center;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.btn{
+    width: 100%;
+    text-align: center;
 }
 
 .stats{
-justify-content:center;
-flex-wrap:wrap;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap: 20px;
 }
 
 .nav-container{
-flex-direction:column;
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 16px;
 }
 
-.nav-links{
-display:flex;
-flex-wrap:wrap;
-justify-content:center;
-gap:15px;
-margin-top:15px;
+.logo{
+    font-size: 1.4rem;
+    margin: 0;
+}
+
+.menu-btn{
+    font-size: 24px;
+    width: 42px;
+    height: 42px;
+}
+
+.section-title{
+    font-size: 2rem;
+    margin-bottom: 28px;
+}
+
+.skills-grid,
+.projects-grid{
+    gap: 16px;
+}
+
+.skill-card,
+.project-content{
+    padding: 20px;
+}
+
+.contact p{
+    margin-bottom: 10px;
 }
 
 }
@@ -348,22 +464,41 @@ margin-top:15px;
 <!-- NAVBAR -->
 
 <nav>
-   <div class="container nav-container">
-<div class="logo">velvet aura studio</div>
+  <div class="container nav-container">
 
-<div class="nav-links">
-<a href="profile.html">Profile</a>
-<a href="#home">Home</a>
-<a href="#about">About</a>
-<a href="#skills">Skills</a>
-<a href="#projects">Projects</a>
-<a href="#contact">Contact</a>
-<a href="login.html" id="loginBtn" class="login-btn">Login</a>
+    <div class="menu-btn" id="menuBtn">
+      ☰
+    </div>
 
-<a href="#" id="logoutBtn" class="login-btn">Logout</a>
-</div>
-</div>
+    <!-- Logo -->
+    <div class="logo">
+      Velvet Aura Studio
+    </div>
+
+  </div>
 </nav>
+
+<!-- Overlay -->
+<div class="overlay" id="overlay"></div>
+
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+
+    <a href="profile.html">👤 Profile</a>
+
+    <a href="#home">🏠 Home</a>
+
+    <a href="#skills">💡 Skills</a>
+
+    <a href="#projects">📂 Projects</a>
+
+    <a href="#contact">📞 Contact</a>
+
+    <a href="login.html" id="loginBtn">🔑 Login</a>
+
+    <a href="#" id="logoutBtn">🚪 Logout</a>
+
+</div>
 
 <!-- HERO -->
 
@@ -577,9 +712,60 @@ AOS.init({
 
 <script src="script.js"></script>
 
+<script>
+function toggleMenu() {
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('overlay');
+  const isOpen = sidebar.classList.contains('active');
+
+  sidebar.classList.toggle('active', !isOpen);
+  overlay.classList.toggle('active', !isOpen);
+  sidebar.style.left = !isOpen ? '0' : '-280px';
+  overlay.style.opacity = !isOpen ? '1' : '0';
+  overlay.style.visibility = !isOpen ? 'visible' : 'hidden';
+  document.body.style.overflow = !isOpen ? 'hidden' : 'auto';
+}
+
+function closeMenu() {
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('overlay');
+
+  sidebar.classList.remove('active');
+  overlay.classList.remove('active');
+  sidebar.style.left = '-280px';
+  overlay.style.opacity = '0';
+  overlay.style.visibility = 'hidden';
+  document.body.style.overflow = 'auto';
+}
+
+window.toggleMenu = toggleMenu;
+window.closeMenu = closeMenu;
+
+document.addEventListener('DOMContentLoaded', () => {
+  const menuBtn = document.getElementById('menuBtn');
+  const overlay = document.getElementById('overlay');
+
+  if (menuBtn) {
+    menuBtn.addEventListener('click', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      toggleMenu();
+    });
+  }
+
+  if (overlay) {
+    overlay.addEventListener('click', closeMenu);
+  }
+
+  document.querySelectorAll('#sidebar a').forEach((link) => {
+    link.addEventListener('click', closeMenu);
+  });
+});
+</script>
+
 <div class="cursor-glow"></div>
 
 <script type="module" src="firebase-auth.js"></script>
 
 </body>
-</html> 
+</html>
