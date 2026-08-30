@@ -155,6 +155,28 @@ app.post("/api/deals", async (req, res) => {
     }
 });
 
+app.get("/api/deals", async (req, res) => {
+    try {
+
+        const deals = await Deal.find().sort({ _id: -1 });
+
+        res.json({
+            success: true,
+            deals: deals
+        });
+
+    } catch (err) {
+
+        console.log("GET DEALS ERROR:", err);
+
+        res.status(500).json({
+            success: false,
+            message: "Failed to fetch deals"
+        });
+
+    }
+});
+
 // DELETE DEAL
 app.delete("/api/deals/:id", async (req, res) => {
     try {
