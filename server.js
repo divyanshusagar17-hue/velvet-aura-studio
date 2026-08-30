@@ -155,25 +155,30 @@ app.post("/api/deals", async (req, res) => {
     }
 });
 
-app.get("/api/deals", async (req, res) => {
+// DELETE DEAL
+app.delete("/api/deals/:id", async (req, res) => {
     try {
+        const deletedDeal = await Deal.findByIdAndDelete(req.params.id);
 
-        const deals = await Deal.find().sort({ createdAt: -1 });
+        if (!deletedDeal) {
+            return res.status(404).json({
+                success: false,
+                message: "Deal not found"
+            });
+        }
 
         res.json({
             success: true,
-            deals: deals
+            message: "Deal deleted successfully"
         });
 
     } catch (err) {
-
         console.log(err);
 
         res.status(500).json({
             success: false,
-            message: "Error Fetching Deals"
+            message: "Error deleting deal"
         });
-
     }
 });
 
