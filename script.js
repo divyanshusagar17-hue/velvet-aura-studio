@@ -28,13 +28,11 @@ if (glow) {
 
 console.log("Sidebar JS Loaded");
 
-// ===============================
 // LOAD DEALS FROM BACKEND
-// ===============================
 
 async function loadDeals() {
     try {
-        const response = await fetch("http://localhost:3000/api/deals");
+        const response = await fetch("https://velvet-aura-studio.onrender.com/api/deals");
         const data = await response.json();
 
         const dealsContainer = document.getElementById("dealsContainer");
@@ -49,7 +47,7 @@ async function loadDeals() {
         }
 
         data.deals.forEach((deal) => {
-
+             
             const card = document.createElement("div");
             card.className = "project-card";
 
