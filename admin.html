@@ -2,7 +2,9 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Admin Panel - Velvet Aura Studio</title>
@@ -10,8 +12,13 @@
     <link rel="stylesheet" href="style.css">
 
     <style>
+
+        /* =========================
+           ADMIN CONTAINER
+        ========================= */
+
         .admin-container {
-            max-width: 1100px;
+            max-width: 1150px;
             margin: 120px auto 60px;
             padding: 0 20px;
         }
@@ -22,7 +29,13 @@
             margin-bottom: 40px;
         }
 
-        .deal-form {
+
+        /* =========================
+           FORM
+        ========================= */
+
+        .deal-form,
+        .deals-section {
             background: #1e293b;
             padding: 30px;
             border-radius: 15px;
@@ -66,6 +79,7 @@
             color: white;
             outline: none;
             box-sizing: border-box;
+            font-family: inherit;
         }
 
         .form-group textarea {
@@ -78,19 +92,138 @@
             border-color: #22d3ee;
         }
 
+
+        /* =========================
+           CATEGORY SEARCH
+        ========================= */
+
+        .category-wrapper {
+            position: relative;
+        }
+
+        .category-input {
+            width: 100%;
+        }
+
+        .category-options {
+            display: none;
+
+            position: absolute;
+
+            z-index: 100;
+
+            top: calc(100% + 5px);
+
+            left: 0;
+            right: 0;
+
+            max-height: 230px;
+
+            overflow-y: auto;
+
+            background: #0f172a;
+
+            border: 1px solid #334155;
+
+            border-radius: 8px;
+
+            box-shadow:
+                0 10px 30px rgba(0, 0, 0, 0.35);
+        }
+
+        .category-options.show {
+            display: block;
+        }
+
+        .category-option {
+            padding: 12px 14px;
+
+            color: #cbd5e1;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        .category-option:hover {
+            background: #1e293b;
+            color: #22d3ee;
+        }
+
+
+        /* =========================
+           IMAGE HELP
+        ========================= */
+
+        .image-help {
+            color: #64748b;
+            font-size: 12px;
+        }
+
+
+        /* =========================
+           TAG HELP
+        ========================= */
+
+        .tags-help {
+            color: #64748b;
+            font-size: 12px;
+        }
+
+
+        /* =========================
+           BUTTONS
+        ========================= */
+
         .add-deal-btn {
             margin-top: 22px;
+
             padding: 12px 25px;
+
             border: none;
+
             border-radius: 8px;
+
             background: #22d3ee;
+
             color: #000;
+
             font-weight: 600;
+
             cursor: pointer;
+
+            transition: 0.2s;
         }
 
         .add-deal-btn:hover {
+            background: #67e8f9;
             transform: translateY(-2px);
+        }
+
+        .cancel-edit-btn {
+            margin-top: 22px;
+
+            margin-left: 10px;
+
+            padding: 12px 25px;
+
+            border: 1px solid #64748b;
+
+            border-radius: 8px;
+
+            background: transparent;
+
+            color: #cbd5e1;
+
+            font-weight: 600;
+
+            cursor: pointer;
+
+            display: none;
+        }
+
+        .cancel-edit-btn:hover {
+            background: #334155;
         }
 
         .message {
@@ -98,29 +231,41 @@
             color: #22d3ee;
         }
 
-        /* Existing Deals */
 
-        .deals-section {
-            background: #1e293b;
-            padding: 30px;
-            border-radius: 15px;
-        }
+        /* =========================
+           DEAL HEADER
+        ========================= */
 
         .deals-header {
             display: flex;
+
             justify-content: space-between;
+
             align-items: center;
+
             gap: 15px;
+
             margin-bottom: 25px;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 10px;
         }
 
         .refresh-btn {
             padding: 10px 18px;
+
             border: 1px solid #22d3ee;
+
             border-radius: 8px;
+
             background: transparent;
+
             color: #22d3ee;
+
             cursor: pointer;
+
             font-weight: 600;
         }
 
@@ -129,23 +274,76 @@
             color: #000;
         }
 
+
+        /* =========================
+           ADMIN SEARCH
+        ========================= */
+
+        .admin-search {
+            width: 100%;
+
+            padding: 14px 16px;
+
+            margin-bottom: 25px;
+
+            box-sizing: border-box;
+
+            background: #0f172a;
+
+            border: 1px solid #334155;
+
+            border-radius: 10px;
+
+            color: white;
+
+            outline: none;
+
+            font-size: 15px;
+        }
+
+        .admin-search:focus {
+            border-color: #22d3ee;
+
+            box-shadow:
+                0 0 0 2px rgba(34, 211, 238, 0.08);
+        }
+
+
+        /* =========================
+           DEAL LIST
+        ========================= */
+
         .deals-list {
             display: grid;
+
             grid-template-columns: repeat(2, 1fr);
+
             gap: 20px;
         }
 
         .admin-deal-card {
             background: #0f172a;
+
             border: 1px solid #334155;
+
             border-radius: 12px;
+
             overflow: hidden;
+
+            transition: 0.2s;
         }
 
-        .admin-deal-card img {
+        .admin-deal-card:hover {
+            border-color: #22d3ee;
+        }
+
+        .admin-deal-image {
             width: 100%;
+
             height: 180px;
+
             object-fit: cover;
+
             display: block;
         }
 
@@ -155,44 +353,128 @@
 
         .admin-deal-info h3 {
             color: white;
+
             margin: 0 0 8px;
         }
 
         .admin-deal-info p {
             color: #cbd5e1;
+
             margin: 6px 0;
         }
 
         .price {
             color: #22d3ee !important;
+
             font-size: 18px;
+
             font-weight: bold;
         }
 
-        .delete-btn {
-            width: 100%;
+
+        /* =========================
+           TAGS
+        ========================= */
+
+        .tag-list {
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 6px;
+
+            margin-top: 10px;
+        }
+
+        .tag {
+            background:
+                rgba(34, 211, 238, 0.12);
+
+            border:
+                1px solid rgba(34, 211, 238, 0.3);
+
+            color: #22d3ee;
+
+            padding: 4px 8px;
+
+            border-radius: 20px;
+
+            font-size: 11px;
+        }
+
+
+        /* =========================
+           CARD BUTTONS
+        ========================= */
+
+        .card-buttons {
+            display: flex;
+
+            gap: 10px;
+
             margin-top: 15px;
+        }
+
+        .edit-btn,
+        .delete-btn {
+            flex: 1;
+
             padding: 11px;
+
             border: none;
+
             border-radius: 8px;
-            background: #ef4444;
+
             color: white;
+
             font-weight: 600;
+
             cursor: pointer;
+        }
+
+        .edit-btn {
+            background: #2563eb;
+        }
+
+        .edit-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .delete-btn {
+            background: #ef4444;
         }
 
         .delete-btn:hover {
             background: #dc2626;
         }
 
+        .image-count {
+            color: #94a3b8 !important;
+
+            font-size: 12px;
+        }
+
+
+        /* =========================
+           LOADING
+        ========================= */
+
         .loading,
         .empty-message {
             color: #cbd5e1;
+
             text-align: center;
+
             padding: 25px;
         }
 
+
+        /* =========================
+           MOBILE
+        ========================= */
+
         @media (max-width: 700px) {
+
             .form-grid,
             .deals-list {
                 grid-template-columns: 1fr;
@@ -208,139 +490,386 @@
 
             .deals-header {
                 flex-direction: column;
+
                 align-items: flex-start;
             }
+
+            .header-buttons {
+                width: 100%;
+            }
+
+            .refresh-btn {
+                width: 100%;
+            }
+
+            .card-buttons {
+                flex-direction: column;
+            }
+
+            .cancel-edit-btn {
+                margin-left: 0;
+            }
+
         }
+
     </style>
+
 </head>
+
 
 <body>
 
-    <div class="admin-container">
 
-        <h1 class="admin-title">
-            🔐 Velvet Aura Admin Panel
-        </h1>
+<div class="admin-container">
 
-        <!-- ADD DEAL -->
 
-        <div class="deal-form">
+    <!-- =========================
+         TITLE
+    ========================= -->
 
-            <h2>➕ Add New Deal</h2>
+    <h1 class="admin-title">
+        🔐 Velvet Aura Admin Panel
+    </h1>
 
-            <form id="dealForm">
 
-                <div class="form-grid">
+    <!-- =========================
+         ADD / EDIT DEAL FORM
+    ========================= -->
 
-                    <div class="form-group">
-                        <label>Product Name</label>
-                        <input
-                            type="text"
-                            id="productName"
-                            placeholder="Wireless Headphones"
-                            required
-                        >
-                    </div>
+    <div class="deal-form">
 
-                    <div class="form-group">
-                        <label>Category</label>
+        <h2 id="formTitle">
+            ➕ Add New Deal
+        </h2>
+
+
+        <form id="dealForm">
+
+
+            <div class="form-grid">
+
+
+                <!-- PRODUCT NAME -->
+
+                <div class="form-group">
+
+                    <label>
+                        Product Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="productName"
+                        placeholder="Samsung Galaxy Phone"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- CATEGORY -->
+
+                <div class="form-group">
+
+                    <label>
+                        Category
+                    </label>
+
+                    <div class="category-wrapper">
+
                         <input
                             type="text"
                             id="category"
-                            placeholder="Electronics"
+                            class="category-input"
+                            placeholder="Type 2-3 letters or select..."
+                            autocomplete="off"
                             required
                         >
-                    </div>
 
-                    <div class="form-group full">
-                        <label>Description</label>
-                        <textarea
-                            id="description"
-                            placeholder="Enter product description"
-                            required
-                        ></textarea>
-                    </div>
+                        <div
+                            id="categoryOptions"
+                            class="category-options"
+                        ></div>
 
-                    <div class="form-group full">
-                        <label>Image URL</label>
-                        <input
-                            type="url"
-                            id="image"
-                            placeholder="https://example.com/image.jpg"
-                            required
-                        >
-                    </div>
-
-                    <div class="form-group">
-                        <label>Original Price</label>
-                        <input
-                            type="number"
-                            id="originalPrice"
-                            placeholder="2999"
-                            required
-                        >
-                    </div>
-
-                    <div class="form-group">
-                        <label>Deal Price</label>
-                        <input
-                            type="number"
-                            id="dealPrice"
-                            placeholder="1999"
-                            required
-                        >
-                    </div>
-
-                    <div class="form-group">
-                        <label>Discount %</label>
-                        <input
-                            type="number"
-                            id="discount"
-                            placeholder="33"
-                            required
-                        >
-                    </div>
-
-                    <div class="form-group">
-                        <label>Store</label>
-                        <input
-                            type="text"
-                            id="store"
-                            placeholder="Amazon"
-                            required
-                        >
-                    </div>
-
-                    <div class="form-group full">
-                        <label>Affiliate URL</label>
-                        <input
-                            type="url"
-                            id="affiliateUrl"
-                            placeholder="https://amazon.in/..."
-                            required
-                        >
                     </div>
 
                 </div>
 
-                <button type="submit" class="add-deal-btn">
-                    Add Deal
-                </button>
 
-                <p class="message" id="message"></p>
+                <!-- DESCRIPTION -->
 
-            </form>
+                <div class="form-group full">
 
-        </div>
+                    <label>
+                        Description
+                    </label>
+
+                    <textarea
+                        id="description"
+                        placeholder="Enter product description"
+                        required
+                    ></textarea>
+
+                </div>
 
 
-        <!-- EXISTING DEALS -->
+                <!-- IMAGE 1 -->
 
-        <div class="deals-section">
+                <div class="form-group">
 
-            <div class="deals-header">
+                    <label>
+                        Image URL 1 *
+                    </label>
 
-                <h2>📦 Existing Deals</h2>
+                    <input
+                        type="url"
+                        id="image1"
+                        placeholder="https://example.com/image1.jpg"
+                        required
+                    >
+
+                    <span class="image-help">
+                        First image is required.
+                    </span>
+
+                </div>
+
+
+                <!-- IMAGE 2 -->
+
+                <div class="form-group">
+
+                    <label>
+                        Image URL 2
+                    </label>
+
+                    <input
+                        type="url"
+                        id="image2"
+                        placeholder="Optional"
+                    >
+
+                </div>
+
+
+                <!-- IMAGE 3 -->
+
+                <div class="form-group">
+
+                    <label>
+                        Image URL 3
+                    </label>
+
+                    <input
+                        type="url"
+                        id="image3"
+                        placeholder="Optional"
+                    >
+
+                </div>
+
+
+                <!-- IMAGE 4 -->
+
+                <div class="form-group">
+
+                    <label>
+                        Image URL 4
+                    </label>
+
+                    <input
+                        type="url"
+                        id="image4"
+                        placeholder="Optional"
+                    >
+
+                </div>
+
+
+                <!-- IMAGE 5 -->
+
+                <div class="form-group">
+
+                    <label>
+                        Image URL 5
+                    </label>
+
+                    <input
+                        type="url"
+                        id="image5"
+                        placeholder="Optional"
+                    >
+
+                </div>
+
+
+                <!-- ORIGINAL PRICE -->
+
+                <div class="form-group">
+
+                    <label>
+                        Original Price
+                    </label>
+
+                    <input
+                        type="number"
+                        id="originalPrice"
+                        placeholder="2999"
+                        min="0"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- DEAL PRICE -->
+
+                <div class="form-group">
+
+                    <label>
+                        Deal Price
+                    </label>
+
+                    <input
+                        type="number"
+                        id="dealPrice"
+                        placeholder="1999"
+                        min="0"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- DISCOUNT -->
+
+                <div class="form-group">
+
+                    <label>
+                        Discount %
+                    </label>
+
+                    <input
+                        type="number"
+                        id="discount"
+                        placeholder="33"
+                        min="0"
+                        max="100"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- STORE -->
+
+                <div class="form-group">
+
+                    <label>
+                        Store
+                    </label>
+
+                    <input
+                        type="text"
+                        id="store"
+                        placeholder="Amazon"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- TAGS -->
+
+                <div class="form-group full">
+
+                    <label>
+                        Tags
+                    </label>
+
+                    <input
+                        type="text"
+                        id="tags"
+                        placeholder="phone, smartphone, samsung, android"
+                    >
+
+                    <span class="tags-help">
+                        Multiple tags ko comma (,) se separate karo.
+                    </span>
+
+                </div>
+
+
+                <!-- AFFILIATE URL -->
+
+                <div class="form-group full">
+
+                    <label>
+                        Affiliate URL
+                    </label>
+
+                    <input
+                        type="url"
+                        id="affiliateUrl"
+                        placeholder="https://amzn.to/..."
+                        required
+                    >
+
+                </div>
+
+
+            </div>
+
+
+            <!-- SUBMIT -->
+
+            <button
+                type="submit"
+                class="add-deal-btn"
+                id="submitBtn"
+            >
+                Add Deal
+            </button>
+
+
+            <!-- CANCEL EDIT -->
+
+            <button
+                type="button"
+                class="cancel-edit-btn"
+                id="cancelEditBtn"
+                onclick="cancelEdit()"
+            >
+                Cancel Edit
+            </button>
+
+
+            <p
+                class="message"
+                id="message"
+            ></p>
+
+
+        </form>
+
+    </div>
+
+
+    <!-- =========================
+         EXISTING DEALS
+    ========================= -->
+
+    <div class="deals-section">
+
+
+        <div class="deals-header">
+
+            <h2>
+                📦 Existing Deals
+            </h2>
+
+
+            <div class="header-buttons">
 
                 <button
                     class="refresh-btn"
@@ -351,312 +880,1184 @@
 
             </div>
 
-            <div id="dealsList" class="deals-list">
-                <p class="loading">
-                    Loading deals...
-                </p>
-            </div>
+        </div>
+
+
+        <!-- SEARCH -->
+
+        <input
+            type="text"
+            id="adminSearch"
+            class="admin-search"
+            placeholder="🔎 Search by product, category, tags or store..."
+        >
+
+
+        <!-- DEALS -->
+
+        <div
+            id="dealsList"
+            class="deals-list"
+        >
+
+            <p class="loading">
+                Loading deals...
+            </p>
 
         </div>
+
 
     </div>
 
 
-    <script>
-
-        const API_URL =
-            "https://velvet-aura-studio.onrender.com";
-
-        const form =
-            document.getElementById("dealForm");
-
-        const message =
-            document.getElementById("message");
-
-        const dealsList =
-            document.getElementById("dealsList");
+</div>
 
 
-        // =========================
-        // ADD DEAL
-        // =========================
-
-        form.addEventListener("submit", async (event) => {
-
-            event.preventDefault();
-
-            const deal = {
-
-                productName:
-                    document.getElementById("productName").value,
-
-                description:
-                    document.getElementById("description").value,
-
-                image:
-                    document.getElementById("image").value,
-
-                originalPrice:
-                    Number(
-                        document.getElementById("originalPrice").value
-                    ),
-
-                dealPrice:
-                    Number(
-                        document.getElementById("dealPrice").value
-                    ),
-
-                discount:
-                    Number(
-                        document.getElementById("discount").value
-                    ),
-
-                store:
-                    document.getElementById("store").value,
-
-                affiliateUrl:
-                    document.getElementById("affiliateUrl").value,
-
-                category:
-                    document.getElementById("category").value
-            };
+<script>
 
 
-            try {
+// =========================
+// API
+// =========================
 
-                message.textContent =
-                    "Saving deal...";
-
-
-                const response = await fetch(
-                    `${API_URL}/api/deals`,
-                    {
-                        method: "POST",
-
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-
-                        body: JSON.stringify(deal)
-                    }
-                );
+const API_URL =
+    "https://velvet-aura-studio.onrender.com";
 
 
-                const data =
-                    await response.json();
+// =========================
+// ELEMENTS
+// =========================
+
+const form =
+    document.getElementById("dealForm");
+
+const message =
+    document.getElementById("message");
+
+const dealsList =
+    document.getElementById("dealsList");
+
+const adminSearch =
+    document.getElementById("adminSearch");
+
+const categoryInput =
+    document.getElementById("category");
+
+const categoryOptions =
+    document.getElementById("categoryOptions");
 
 
-                if (data.success) {
+// =========================
+// EDIT STATE
+// =========================
 
-                    message.textContent =
-                        "✅ Deal added successfully!";
+let editingDealId = null;
 
-                    form.reset();
-
-                    // List ko bhi update karo
-                    loadDeals();
-
-                } else {
-
-                    message.textContent =
-                        "❌ " +
-                        (data.message ||
-                            "Failed to add deal");
-                }
+let allDeals = [];
 
 
-            } catch (error) {
+// =========================
+// CATEGORIES
+// =========================
 
-                console.error(error);
+const categories = [
 
-                message.textContent =
-                    "❌ Server connection failed.";
-            }
+    "Electronics",
+
+    "Mobile & Accessories",
+
+    "Computers & Laptops",
+
+    "Camera & Photography",
+
+    "Audio",
+
+    "Home & Kitchen",
+
+    "Fashion & Clothing",
+
+    "Beauty & Personal Care",
+
+    "Sports & Fitness",
+
+    "Toys & Games",
+
+    "Books",
+
+    "Office Products",
+
+    "Automotive",
+
+    "Grocery",
+
+    "Health & Household",
+
+    "Other"
+
+];
+
+
+// =========================
+// CATEGORY SUGGESTIONS
+// =========================
+
+function showCategoryOptions() {
+
+    const query =
+        categoryInput.value
+            .trim()
+            .toLowerCase();
+
+
+    categoryOptions.innerHTML = "";
+
+
+    const filtered =
+        categories.filter(category => {
+
+            return category
+                .toLowerCase()
+                .includes(query);
 
         });
 
 
+    filtered.forEach(category => {
+
+
+        const option =
+            document.createElement("div");
+
+
+        option.className =
+            "category-option";
+
+
+        option.textContent =
+            category;
+
+
+        option.addEventListener(
+            "click",
+            () => {
+
+                categoryInput.value =
+                    category;
+
+                categoryOptions.classList.remove(
+                    "show"
+                );
+
+            }
+        );
+
+
+        categoryOptions.appendChild(
+            option
+        );
+
+    });
+
+
+    if (filtered.length > 0) {
+
+        categoryOptions.classList.add(
+            "show"
+        );
+
+    } else {
+
+        categoryOptions.classList.remove(
+            "show"
+        );
+
+    }
+
+}
+
+
+categoryInput.addEventListener(
+    "focus",
+    showCategoryOptions
+);
+
+
+categoryInput.addEventListener(
+    "input",
+    showCategoryOptions
+);
+
+
+document.addEventListener(
+    "click",
+    (event) => {
+
+        if (
+            !event.target.closest(
+                ".category-wrapper"
+            )
+        ) {
+
+            categoryOptions.classList.remove(
+                "show"
+            );
+
+        }
+
+    }
+);
+
+
+// =========================
+// ADD / UPDATE DEAL
+// =========================
+
+form.addEventListener(
+    "submit",
+    async (event) => {
+
+        event.preventDefault();
+
+
         // =========================
-        // LOAD DEALS
+        // IMAGES
         // =========================
 
-        async function loadDeals() {
+        const images = [
 
-            dealsList.innerHTML =
-                `<p class="loading">Loading deals...</p>`;
+            document
+                .getElementById("image1")
+                .value
+                .trim(),
+
+            document
+                .getElementById("image2")
+                .value
+                .trim(),
+
+            document
+                .getElementById("image3")
+                .value
+                .trim(),
+
+            document
+                .getElementById("image4")
+                .value
+                .trim(),
+
+            document
+                .getElementById("image5")
+                .value
+                .trim()
+
+        ].filter(Boolean);
 
 
-            try {
+        // =========================
+        // TAGS
+        // =========================
 
-                const response =
-                    await fetch(
-                        `${API_URL}/api/deals`
+        const tags =
+            document
+                .getElementById("tags")
+                .value
+                .split(",")
+                .map(tag =>
+                    tag
+                        .trim()
+                        .toLowerCase()
+                )
+                .filter(Boolean);
+
+
+        // =========================
+        // DEAL OBJECT
+        // =========================
+
+        const deal = {
+
+            productName:
+                document
+                    .getElementById("productName")
+                    .value
+                    .trim(),
+
+            description:
+                document
+                    .getElementById("description")
+                    .value
+                    .trim(),
+
+            images:
+                images,
+
+            originalPrice:
+                Number(
+                    document
+                        .getElementById("originalPrice")
+                        .value
+                ),
+
+            dealPrice:
+                Number(
+                    document
+                        .getElementById("dealPrice")
+                        .value
+                ),
+
+            discount:
+                Number(
+                    document
+                        .getElementById("discount")
+                        .value
+                ),
+
+            store:
+                document
+                    .getElementById("store")
+                    .value
+                    .trim(),
+
+            affiliateUrl:
+                document
+                    .getElementById("affiliateUrl")
+                    .value
+                    .trim(),
+
+            category:
+                document
+                    .getElementById("category")
+                    .value
+                    .trim(),
+
+            tags:
+                tags
+
+        };
+
+
+        try {
+
+
+            message.textContent =
+                editingDealId
+                    ? "Updating deal..."
+                    : "Saving deal...";
+
+
+            // =========================
+            // URL + METHOD
+            // =========================
+
+            const url =
+                editingDealId
+
+                    ? `${API_URL}/api/deals/${editingDealId}`
+
+                    : `${API_URL}/api/deals`;
+
+
+            const method =
+                editingDealId
+                    ? "PUT"
+                    : "POST";
+
+
+            // =========================
+            // API REQUEST
+            // =========================
+
+            const response =
+                await fetch(
+                    url,
+                    {
+
+                        method: method,
+
+                        headers: {
+
+                            "Content-Type":
+                                "application/json"
+
+                        },
+
+                        body:
+                            JSON.stringify(deal)
+
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            // =========================
+            // SUCCESS
+            // =========================
+
+            if (data.success) {
+
+
+                message.textContent =
+                    editingDealId
+
+                        ? "✅ Deal updated successfully!"
+
+                        : "✅ Deal added successfully!";
+
+
+                form.reset();
+
+
+                editingDealId =
+                    null;
+
+
+                document.getElementById(
+                    "formTitle"
+                ).textContent =
+                    "➕ Add New Deal";
+
+
+                document.getElementById(
+                    "submitBtn"
+                ).textContent =
+                    "Add Deal";
+
+
+                document.getElementById(
+                    "cancelEditBtn"
+                ).style.display =
+                    "none";
+
+
+                await loadDeals();
+
+
+            } else {
+
+
+                message.textContent =
+                    "❌ " +
+                    (
+                        data.message ||
+                        "Something went wrong"
                     );
 
-
-                const data =
-                    await response.json();
+            }
 
 
-                if (
-                    !data.success ||
-                    !data.deals ||
-                    data.deals.length === 0
-                ) {
-
-                    dealsList.innerHTML =
-                        `<p class="empty-message">
-                            No deals found.
-                        </p>`;
-
-                    return;
-                }
+        } catch (error) {
 
 
-                dealsList.innerHTML = "";
+            console.error(
+                "DEAL SAVE ERROR:",
+                error
+            );
 
 
-                data.deals.forEach(deal => {
+            message.textContent =
+                "❌ Server connection failed.";
 
-                    const card =
-                        document.createElement("div");
+        }
 
-                    card.className =
-                        "admin-deal-card";
+    }
+);
 
 
-                    card.innerHTML = `
+// =========================
+// LOAD DEALS
+// =========================
+
+async function loadDeals() {
+
+
+    dealsList.innerHTML =
+        `
+        <p class="loading">
+            Loading deals...
+        </p>
+        `;
+
+
+    try {
+
+
+        const response =
+            await fetch(
+                `${API_URL}/api/deals`
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !data.success ||
+            !data.deals
+        ) {
+
+
+            dealsList.innerHTML =
+                `
+                <p class="empty-message">
+                    ❌ Failed to load deals.
+                </p>
+                `;
+
+
+            return;
+
+        }
+
+
+        allDeals =
+            data.deals;
+
+
+        renderDeals(
+            allDeals
+        );
+
+
+    } catch (error) {
+
+
+        console.error(
+            "LOAD DEALS ERROR:",
+            error
+        );
+
+
+        dealsList.innerHTML =
+            `
+            <p class="empty-message">
+                ❌ Failed to load deals.
+            </p>
+            `;
+
+    }
+
+}
+
+
+// =========================
+// RENDER DEALS
+// =========================
+
+function renderDeals(deals) {
+
+
+    if (
+        !deals ||
+        deals.length === 0
+    ) {
+
+
+        dealsList.innerHTML =
+            `
+            <p class="empty-message">
+                No matching products found.
+            </p>
+            `;
+
+
+        return;
+
+    }
+
+
+    dealsList.innerHTML = "";
+
+
+    deals.forEach(
+        deal => {
+
+
+            // =========================
+            // IMAGES
+            // =========================
+
+            const images =
+                Array.isArray(deal.images) &&
+                deal.images.length > 0
+
+                    ? deal.images
+
+                    : deal.image
+                        ? [deal.image]
+                        : [];
+
+
+            const firstImage =
+                images[0] || "";
+
+
+            // =========================
+            // TAGS
+            // =========================
+
+            const tags =
+                Array.isArray(deal.tags)
+                    ? deal.tags
+                    : [];
+
+
+            // =========================
+            // CARD
+            // =========================
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+
+            card.className =
+                "admin-deal-card";
+
+
+            card.innerHTML = `
+
+                ${
+                    firstImage
+
+                        ? `
 
                         <img
-                            src="${deal.image}"
-                            alt="${deal.productName}"
+                            class="admin-deal-image"
+                            src="${firstImage}"
+                            alt="${deal.productName || "Product"}"
                             onerror="this.style.display='none'"
                         >
 
-                        <div class="admin-deal-info">
+                        `
 
-                            <h3>
-                                ${deal.productName}
-                            </h3>
-
-                            <p>
-                                ${deal.description}
-                            </p>
-
-                            <p class="price">
-                                ₹${deal.dealPrice}
-                                &nbsp;
-                                <del>
-                                    ₹${deal.originalPrice}
-                                </del>
-                            </p>
-
-                            <p>
-                                🏪 ${deal.store}
-                            </p>
-
-                            <p>
-                                🏷️ ${deal.category}
-                            </p>
-
-                            <p>
-                                🔥 ${deal.discount}% OFF
-                            </p>
-
-                            <button
-                                class="delete-btn"
-                                onclick="deleteDeal('${deal._id}')"
-                            >
-                                🗑️ Delete Deal
-                            </button>
-
-                        </div>
-                    `;
-
-
-                    dealsList.appendChild(card);
-
-                });
-
-
-            } catch (error) {
-
-                console.error(error);
-
-                dealsList.innerHTML =
-                    `<p class="empty-message">
-                        ❌ Failed to load deals.
-                    </p>`;
-            }
-        }
-
-
-        // =========================
-        // DELETE DEAL
-        // =========================
-
-        async function deleteDeal(id) {
-
-            const confirmDelete =
-                confirm(
-                    "Are you sure you want to delete this deal?"
-                );
-
-
-            if (!confirmDelete) {
-                return;
-            }
-
-
-            try {
-
-                const response =
-                    await fetch(
-                        `${API_URL}/api/deals/${id}`,
-                        {
-                            method: "DELETE"
-                        }
-                    );
-
-
-                const data =
-                    await response.json();
-
-
-                if (data.success) {
-
-                    alert(
-                        "✅ Deal deleted successfully!"
-                    );
-
-                    loadDeals();
-
-                } else {
-
-                    alert(
-                        "❌ " +
-                        (data.message ||
-                            "Failed to delete deal")
-                    );
+                        : ""
                 }
 
 
-            } catch (error) {
+                <div class="admin-deal-info">
 
-                console.error(error);
 
-                alert(
-                    "❌ Server connection failed."
-                );
-            }
+                    <h3>
+                        ${deal.productName || "Untitled Product"}
+                    </h3>
+
+
+                    <p>
+                        ${deal.description || ""}
+                    </p>
+
+
+                    <p class="price">
+
+                        ₹${Number(
+                            deal.dealPrice || 0
+                        ).toLocaleString("en-IN")}
+
+                        &nbsp;
+
+                        <del>
+                            ₹${Number(
+                                deal.originalPrice || 0
+                            ).toLocaleString("en-IN")}
+                        </del>
+
+                    </p>
+
+
+                    <p>
+                        🏪 ${deal.store || "N/A"}
+                    </p>
+
+
+                    <p>
+                        📂 ${deal.category || "Other"}
+                    </p>
+
+
+                    <p>
+                        🔥 ${deal.discount || 0}% OFF
+                    </p>
+
+
+                    ${
+                        tags.length > 0
+
+                            ? `
+
+                            <div class="tag-list">
+
+                                ${tags.map(tag => `
+
+                                    <span class="tag">
+                                        #${tag}
+                                    </span>
+
+                                `).join("")}
+
+                            </div>
+
+                            `
+
+                            : ""
+                    }
+
+
+                    <p class="image-count">
+
+                        🖼️ ${images.length}
+                        image${images.length === 1 ? "" : "s"}
+
+                    </p>
+
+
+                    <div class="card-buttons">
+
+
+                        <button
+                            class="edit-btn"
+                            onclick="editDeal('${deal._id}')"
+                        >
+                            ✏️ Edit
+                        </button>
+
+
+                        <button
+                            class="delete-btn"
+                            onclick="deleteDeal('${deal._id}')"
+                        >
+                            🗑️ Delete
+                        </button>
+
+
+                    </div>
+
+
+                </div>
+
+            `;
+
+
+            dealsList.appendChild(
+                card
+            );
+
+        }
+    );
+
+}
+
+
+// =========================
+// ADMIN SEARCH
+// =========================
+
+adminSearch.addEventListener(
+    "input",
+    () => {
+
+
+        const query =
+            adminSearch.value
+                .trim()
+                .toLowerCase();
+
+
+        // Empty search
+
+        if (!query) {
+
+            renderDeals(
+                allDeals
+            );
+
+            return;
 
         }
 
 
-        // Page open hote hi deals load karo
-        loadDeals();
+        const results =
+            allDeals.filter(
+                deal => {
 
-    </script>
+
+                    const productName =
+                        (
+                            deal.productName || ""
+                        )
+                        .toLowerCase();
+
+
+                    const category =
+                        (
+                            deal.category || ""
+                        )
+                        .toLowerCase();
+
+
+                    const store =
+                        (
+                            deal.store || ""
+                        )
+                        .toLowerCase();
+
+
+                    const description =
+                        (
+                            deal.description || ""
+                        )
+                        .toLowerCase();
+
+
+                    const tags =
+                        Array.isArray(
+                            deal.tags
+                        )
+
+                            ? deal.tags
+                                .join(" ")
+                                .toLowerCase()
+
+                            : "";
+
+
+                    return (
+
+                        productName.includes(
+                            query
+                        )
+
+                        ||
+
+                        category.includes(
+                            query
+                        )
+
+                        ||
+
+                        store.includes(
+                            query
+                        )
+
+                        ||
+
+                        description.includes(
+                            query
+                        )
+
+                        ||
+
+                        tags.includes(
+                            query
+                        )
+
+                    );
+
+                }
+            );
+
+
+        renderDeals(
+            results
+        );
+
+    }
+);
+
+
+// =========================
+// EDIT DEAL
+// =========================
+
+function editDeal(id) {
+
+
+    const deal =
+        allDeals.find(
+            item =>
+                item._id === id
+        );
+
+
+    if (!deal) {
+
+        alert(
+            "Deal not found."
+        );
+
+        return;
+
+    }
+
+
+    editingDealId =
+        id;
+
+
+    // =========================
+    // FORM TITLE
+    // =========================
+
+    document.getElementById(
+        "formTitle"
+    ).textContent =
+        "✏️ Edit Deal";
+
+
+    document.getElementById(
+        "submitBtn"
+    ).textContent =
+        "Update Deal";
+
+
+    document.getElementById(
+        "cancelEditBtn"
+    ).style.display =
+        "inline-block";
+
+
+    // =========================
+    // BASIC FIELDS
+    // =========================
+
+    document.getElementById(
+        "productName"
+    ).value =
+        deal.productName || "";
+
+
+    document.getElementById(
+        "description"
+    ).value =
+        deal.description || "";
+
+
+    document.getElementById(
+        "originalPrice"
+    ).value =
+        deal.originalPrice || "";
+
+
+    document.getElementById(
+        "dealPrice"
+    ).value =
+        deal.dealPrice || "";
+
+
+    document.getElementById(
+        "discount"
+    ).value =
+        deal.discount || "";
+
+
+    document.getElementById(
+        "store"
+    ).value =
+        deal.store || "";
+
+
+    document.getElementById(
+        "category"
+    ).value =
+        deal.category || "Other";
+
+
+    document.getElementById(
+        "affiliateUrl"
+    ).value =
+        deal.affiliateUrl || "";
+
+
+    // =========================
+    // IMAGES
+    // =========================
+
+    const images =
+        Array.isArray(deal.images) &&
+        deal.images.length > 0
+
+            ? deal.images
+
+            : deal.image
+                ? [deal.image]
+                : [];
+
+
+    for (
+        let i = 1;
+        i <= 5;
+        i++
+    ) {
+
+        document.getElementById(
+            `image${i}`
+        ).value =
+            images[i - 1] || "";
+
+    }
+
+
+    // =========================
+    // TAGS
+    // =========================
+
+    document.getElementById(
+        "tags"
+    ).value =
+
+        Array.isArray(deal.tags)
+
+            ? deal.tags.join(", ")
+
+            : "";
+
+
+    // =========================
+    // SCROLL TO FORM
+    // =========================
+
+    window.scrollTo({
+
+        top: 0,
+
+        behavior: "smooth"
+
+    });
+
+}
+
+
+// =========================
+// CANCEL EDIT
+// =========================
+
+function cancelEdit() {
+
+
+    editingDealId =
+        null;
+
+
+    form.reset();
+
+
+    document.getElementById(
+        "formTitle"
+    ).textContent =
+        "➕ Add New Deal";
+
+
+    document.getElementById(
+        "submitBtn"
+    ).textContent =
+        "Add Deal";
+
+
+    document.getElementById(
+        "cancelEditBtn"
+    ).style.display =
+        "none";
+
+
+    message.textContent =
+        "";
+
+}
+
+
+// =========================
+// DELETE DEAL
+// =========================
+
+async function deleteDeal(id) {
+
+
+    const confirmDelete =
+        confirm(
+            "Are you sure you want to delete this deal?"
+        );
+
+
+    if (!confirmDelete) {
+
+        return;
+
+    }
+
+
+    try {
+
+
+        const response =
+            await fetch(
+                `${API_URL}/api/deals/${id}`,
+                {
+
+                    method: "DELETE"
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (data.success) {
+
+
+            alert(
+                "✅ Deal deleted successfully!"
+            );
+
+
+            await loadDeals();
+
+
+        } else {
+
+
+            alert(
+                "❌ " +
+                (
+                    data.message ||
+                    "Failed to delete deal"
+                )
+            );
+
+        }
+
+
+    } catch (error) {
+
+
+        console.error(
+            "DELETE ERROR:",
+            error
+        );
+
+
+        alert(
+            "❌ Server connection failed."
+        );
+
+    }
+
+}
+
+
+// =========================
+// INITIAL LOAD
+// =========================
+
+loadDeals();
+
+</script>
+
 
 </body>
 

@@ -4,9 +4,9 @@
   "description": "",
   "main": "complete-profile.js",
   "scripts": {
-  "start": "node server.js",
-  "test": "echo \"Error: no test specified\" && exit 1"
-},
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/divyanshusagar17-hue/velvet-aura-studio.git"
@@ -26,6 +26,7 @@
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
     "mongodb": "^6.21.0",
-    "mongoose": "^8.24.1"
+    "mongoose": "^8.24.1",
+    "node-cron": "^4.6.0"
   }
 }

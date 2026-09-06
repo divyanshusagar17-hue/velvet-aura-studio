@@ -1,0 +1,1552 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Search Products - Velvet Aura Studio</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+
+        body {
+            background: #f8fafc;
+            color: #0f172a;
+        }
+
+        .search-page {
+            min-height: 100vh;
+            padding: 35px 5% 80px;
+        }
+
+        /* BACK */
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+
+            color: #334155;
+            text-decoration: none;
+
+            font-size: 18px;
+
+            margin-bottom: 55px;
+        }
+
+        .back-link:hover {
+            color: #2563eb;
+        }
+
+        /* SEARCH */
+
+        .search-top {
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+
+            gap: 10px;
+
+            background: white;
+
+            border: 1px solid #dbe3ef;
+
+            border-radius: 20px;
+
+            padding: 8px;
+
+            box-shadow:
+                0 8px 30px rgba(15, 23, 42, 0.08);
+        }
+
+        .search-box input {
+            flex: 1;
+
+            border: none;
+            outline: none;
+
+            padding: 16px 18px;
+
+            font-size: 17px;
+
+            color: #0f172a;
+
+            background: transparent;
+        }
+
+        .search-box input:focus {
+            box-shadow:
+                0 0 0 2px rgba(34, 211, 238, 0.25);
+        }
+
+        .search-box button {
+            border: none;
+
+            background: #2563eb;
+
+            color: white;
+
+            padding: 15px 28px;
+
+            border-radius: 13px;
+
+            font-weight: 600;
+
+            font-size: 16px;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        .search-box button:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        /* SUGGESTIONS */
+
+        .suggestions {
+            position: relative;
+        }
+
+        .suggestion-list {
+            position: absolute;
+
+            top: calc(100% + 8px);
+
+            left: 0;
+
+            right: 0;
+
+            background: white;
+
+            border: 1px solid #dbe3ef;
+
+            border-radius: 14px;
+
+            box-shadow:
+                0 10px 30px rgba(15, 23, 42, 0.12);
+
+            overflow: hidden;
+
+            z-index: 100;
+
+            display: none;
+        }
+
+        .suggestion-item {
+            padding: 13px 18px;
+
+            cursor: pointer;
+
+            color: #334155;
+
+            border-bottom: 1px solid #f1f5f9;
+
+            transition: 0.15s;
+        }
+
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+
+        .suggestion-item:hover {
+            background: #eff6ff;
+
+            color: #2563eb;
+        }
+
+        /* HEADING */
+
+        .search-heading {
+            max-width: 1000px;
+
+            margin: 70px auto 30px;
+        }
+
+        .search-heading h1 {
+            font-size: 30px;
+
+            margin-bottom: 8px;
+
+            color: #0f172a;
+        }
+
+        .search-heading p {
+            color: #64748b;
+
+            font-size: 17px;
+        }
+
+        /* RESULTS */
+
+        #searchResults {
+            max-width: 1000px;
+
+            margin: auto;
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, minmax(0, 1fr));
+
+            gap: 22px;
+        }
+
+        /* CARD */
+
+        .result-card {
+            background: white;
+
+            border: 1px solid #e2e8f0;
+
+            border-radius: 16px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 5px 20px rgba(15, 23, 42, 0.06);
+
+            transition: 0.25s;
+
+            display: flex;
+
+            flex-direction: column;
+        }
+
+        .result-card:hover {
+            transform: translateY(-5px);
+
+            box-shadow:
+                0 12px 30px rgba(15, 23, 42, 0.12);
+        }
+
+        /* IMAGE */
+
+        .result-image {
+            width: 100%;
+
+            height: 230px;
+
+            background: #f8fafc;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            overflow: hidden;
+        }
+
+        .result-image img {
+            width: 100%;
+
+            height: 100%;
+
+            object-fit: contain;
+
+            display: block;
+        }
+
+        /* INFO */
+
+        .result-info {
+            padding: 18px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            flex: 1;
+        }
+
+        .category-badge {
+            display: inline-block;
+
+            width: fit-content;
+
+            background: #eff6ff;
+
+            color: #2563eb;
+
+            padding: 6px 11px;
+
+            border-radius: 8px;
+
+            font-size: 12px;
+
+            font-weight: 600;
+
+            margin-bottom: 12px;
+        }
+
+        .result-info h3 {
+            margin: 0 0 8px;
+
+            font-size: 18px;
+
+            line-height: 1.35;
+
+            color: #0f172a;
+        }
+
+        .result-info p {
+            color: #64748b;
+
+            font-size: 14px;
+
+            line-height: 1.5;
+
+            margin: 0 0 14px;
+        }
+
+        /* PRICE */
+
+        .price {
+            font-size: 19px;
+
+            font-weight: 700;
+
+            color: #0f172a;
+
+            margin-top: auto;
+        }
+
+        .old-price {
+            color: #94a3b8;
+
+            margin-left: 7px;
+
+            font-size: 15px;
+        }
+
+        .discount {
+            color: #16a34a;
+
+            font-weight: 600;
+
+            font-size: 14px;
+
+            margin-left: 7px;
+        }
+
+        /* BUTTON */
+
+        .view-btn {
+            display: block;
+
+            text-align: center;
+
+            margin-top: 15px;
+
+            padding: 12px;
+
+            border-radius: 9px;
+
+            background: #2563eb;
+
+            color: white;
+
+            text-decoration: none;
+
+            font-weight: 600;
+
+            transition: 0.2s;
+        }
+
+        .view-btn:hover {
+            background: #1d4ed8;
+        }
+
+        /* NO RESULTS */
+
+        .no-results {
+            grid-column: 1 / -1;
+
+            text-align: center;
+
+            padding: 70px 20px;
+
+            color: #64748b;
+        }
+
+        .no-results h2 {
+            margin-bottom: 8px;
+
+            color: #334155;
+        }
+
+        .no-results p {
+            margin: 0;
+        }
+
+        /* LOADING */
+
+        .loading {
+            grid-column: 1 / -1;
+
+            text-align: center;
+
+            padding: 60px;
+
+            color: #64748b;
+
+            font-size: 17px;
+        }
+
+        /* TABLET */
+
+        @media (max-width: 900px) {
+
+            #searchResults {
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+            }
+
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 600px) {
+
+            .search-page {
+                padding: 25px 15px 60px;
+            }
+
+            .back-link {
+                margin-bottom: 35px;
+
+                font-size: 16px;
+            }
+
+            .search-box {
+                flex-direction: column;
+
+                padding: 8px;
+            }
+
+            .search-box input,
+            .search-box button {
+                width: 100%;
+
+                box-sizing: border-box;
+            }
+
+            .search-heading {
+                margin-top: 45px;
+            }
+
+            .search-heading h1 {
+                font-size: 24px;
+            }
+
+            #searchResults {
+                grid-template-columns: 1fr;
+            }
+
+            .result-image {
+                height: 250px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="search-page">
+
+
+    <!-- BACK -->
+
+    <a
+        href="index.html"
+        class="back-link"
+    >
+        ← Home / Search
+    </a>
+
+
+    <!-- SEARCH -->
+
+    <div class="search-top">
+
+        <div class="suggestions">
+
+            <div class="search-box">
+
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="🔎 Search product..."
+                    autocomplete="off"
+                >
+
+                <button id="searchButton">
+                    Search
+                </button>
+
+            </div>
+
+
+            <!-- SUGGESTIONS -->
+
+            <div
+                class="suggestion-list"
+                id="suggestionList"
+            ></div>
+
+        </div>
+
+    </div>
+
+
+    <!-- HEADING -->
+
+    <div class="search-heading">
+
+        <h1 id="searchTitle">
+            Search Products
+        </h1>
+
+        <p id="resultCount">
+            Find products from Velvet Aura Studio
+        </p>
+
+    </div>
+
+
+    <!-- RESULTS -->
+
+    <div id="searchResults">
+
+        <div class="loading">
+            Loading products...
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+<script>
+
+
+/* =====================================================
+   API
+===================================================== */
+
+const API_URL =
+    "https://velvet-aura-studio.onrender.com";
+
+
+/* =====================================================
+   ELEMENTS
+===================================================== */
+
+const searchInput =
+    document.getElementById("searchInput");
+
+const searchButton =
+    document.getElementById("searchButton");
+
+const searchResults =
+    document.getElementById("searchResults");
+
+const searchTitle =
+    document.getElementById("searchTitle");
+
+const resultCount =
+    document.getElementById("resultCount");
+
+const suggestionList =
+    document.getElementById("suggestionList");
+
+
+/* =====================================================
+   DATA
+===================================================== */
+
+let allDeals = [];
+
+
+/* =====================================================
+   NORMALIZE TEXT
+===================================================== */
+
+function normalizeText(text) {
+
+    return String(text || "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, " ")
+        .trim();
+
+}
+
+
+/* =====================================================
+   GET WORDS
+===================================================== */
+
+function getWords(text) {
+
+    return normalizeText(text)
+        .split(/\s+/)
+        .filter(Boolean);
+
+}
+
+
+/* =====================================================
+   CATEGORY GROUPS
+===================================================== */
+
+const SEARCH_GROUPS = {
+
+    phone: [
+        "phone",
+        "phones",
+        "mobile",
+        "mobiles",
+        "smartphone",
+        "smartphones",
+        "iphone",
+        "android"
+    ],
+
+    laptop: [
+        "laptop",
+        "laptops",
+        "notebook",
+        "notebooks",
+        "macbook",
+        "macbooks"
+    ],
+
+    camera: [
+        "camera",
+        "cameras",
+        "dslr",
+        "mirrorless",
+        "webcam"
+    ],
+
+    microphone: [
+        "mic",
+        "mics",
+        "microphone",
+        "microphones",
+        "lav",
+        "lavalier"
+    ],
+
+    clothing: [
+        "cloth",
+        "clothe",
+        "clothes",
+        "clothing",
+        "fashion",
+        "wear",
+        "shirt",
+        "shirts",
+        "tshirt",
+        "tshirts",
+        "tshirt",
+        "jeans",
+        "dress",
+        "dresses",
+        "jacket",
+        "jackets",
+        "hoodie",
+        "hoodies"
+    ],
+
+    computer: [
+        "computer",
+        "computers",
+        "desktop",
+        "pc",
+        "monitor",
+        "keyboard",
+        "mouse"
+    ],
+
+    headphone: [
+        "headphone",
+        "headphones",
+        "earphone",
+        "earphones",
+        "earbuds",
+        "airpods"
+    ]
+
+};
+
+
+/* =====================================================
+   GET SEARCH GROUP
+===================================================== */
+
+function getSearchGroup(query) {
+
+    const words = getWords(query);
+
+    for (const groupName in SEARCH_GROUPS) {
+
+        const keywords =
+            SEARCH_GROUPS[groupName];
+
+        const found =
+            words.some(word =>
+                keywords.includes(word)
+            );
+
+        if (found) {
+            return groupName;
+        }
+
+    }
+
+    return null;
+}
+
+
+/* =====================================================
+   PRODUCT BELONGS TO GROUP
+===================================================== */
+
+function productMatchesGroup(deal, group) {
+
+    if (!group) {
+        return false;
+    }
+
+
+    const productName =
+        normalizeText(deal.productName);
+
+    const description =
+        normalizeText(deal.description);
+
+    const category =
+        normalizeText(deal.category);
+
+
+    const nameWords =
+        getWords(productName);
+
+    const descriptionWords =
+        getWords(description);
+
+    const categoryWords =
+        getWords(category);
+
+
+    const keywords =
+        SEARCH_GROUPS[group];
+
+
+    /* -----------------------------------------------
+       1. PRODUCT NAME
+    ------------------------------------------------ */
+
+    const nameMatch =
+        keywords.some(keyword =>
+            nameWords.includes(keyword)
+        );
+
+
+    if (nameMatch) {
+        return true;
+    }
+
+
+    /* -----------------------------------------------
+       2. CATEGORY
+    ------------------------------------------------ */
+
+    const categoryMatch =
+        keywords.some(keyword =>
+            categoryWords.includes(keyword)
+        );
+
+
+    if (categoryMatch) {
+        return true;
+    }
+
+
+    /* -----------------------------------------------
+       3. DESCRIPTION
+    ------------------------------------------------ */
+
+    const descriptionMatch =
+        keywords.some(keyword =>
+            descriptionWords.includes(keyword)
+        );
+
+
+    /* -----------------------------------------------
+       IMPORTANT:
+       PHONE KO MICROPHONE SE ALAG RAKHNA
+    ------------------------------------------------ */
+
+    if (group === "phone") {
+
+        const isMicrophone =
+            nameWords.includes("microphone") ||
+            nameWords.includes("mic") ||
+            categoryWords.includes("microphone") ||
+            categoryWords.includes("mic");
+
+        if (isMicrophone) {
+            return false;
+        }
+
+        return descriptionMatch;
+    }
+
+
+    /* -----------------------------------------------
+       LAPTOP
+    ------------------------------------------------ */
+
+    if (group === "laptop") {
+
+        const isWrongProduct =
+            nameWords.includes("camera") ||
+            nameWords.includes("microphone") ||
+            nameWords.includes("headphone");
+
+        if (isWrongProduct) {
+            return false;
+        }
+
+        return descriptionMatch;
+    }
+
+
+    /* -----------------------------------------------
+       CAMERA
+    ------------------------------------------------ */
+
+    if (group === "camera") {
+
+        return descriptionMatch;
+    }
+
+
+    /* -----------------------------------------------
+       MICROPHONE
+    ------------------------------------------------ */
+
+    if (group === "microphone") {
+
+        return descriptionMatch;
+    }
+
+
+    /* -----------------------------------------------
+       CLOTHING
+    ------------------------------------------------ */
+
+    if (group === "clothing") {
+
+        return descriptionMatch;
+    }
+
+
+    /* -----------------------------------------------
+       COMPUTER
+    ------------------------------------------------ */
+
+    if (group === "computer") {
+
+        return descriptionMatch;
+    }
+
+
+    /* -----------------------------------------------
+       HEADPHONE
+    ------------------------------------------------ */
+
+    if (group === "headphone") {
+
+        return descriptionMatch;
+    }
+
+
+    return false;
+
+}
+
+
+/* =====================================================
+   NORMAL SEARCH
+===================================================== */
+
+function normalSearch(deal, query) {
+
+    const words =
+        getWords(query);
+
+
+    const productName =
+        getWords(deal.productName);
+
+    const description =
+        getWords(deal.description);
+
+    const category =
+        getWords(deal.category);
+
+
+    /*
+       Exact word matching only.
+
+       IMPORTANT:
+       "phone" will NOT match "microphone"
+    */
+
+    return words.some(word => {
+
+        return (
+            productName.includes(word) ||
+            category.includes(word) ||
+            description.includes(word)
+        );
+
+    });
+
+}
+
+
+/* =====================================================
+   SEARCH PRODUCTS
+===================================================== */
+
+function searchProducts() {
+
+    const originalQuery =
+        searchInput.value.trim();
+
+    const query =
+        normalizeText(originalQuery);
+
+
+    /* -----------------------------------------------
+       EMPTY SEARCH
+    ------------------------------------------------ */
+
+    if (!query) {
+
+        searchTitle.textContent =
+            "All Products";
+
+        resultCount.textContent =
+            `${allDeals.length} products available`;
+
+        displayProducts(allDeals);
+
+        return;
+    }
+
+
+    /* -----------------------------------------------
+       TITLE
+    ------------------------------------------------ */
+
+    searchTitle.textContent =
+        `Search Results for "${originalQuery}"`;
+
+
+    /* -----------------------------------------------
+       CATEGORY GROUP
+    ------------------------------------------------ */
+
+    const group =
+        getSearchGroup(query);
+
+
+    let results = [];
+
+
+    /* -----------------------------------------------
+       CATEGORY SEARCH
+    ------------------------------------------------ */
+
+    if (group) {
+
+        results =
+            allDeals.filter(deal =>
+                productMatchesGroup(deal, group)
+            );
+
+    }
+
+
+    /* -----------------------------------------------
+       NORMAL SEARCH
+       Only when no category group exists
+    ------------------------------------------------ */
+
+    else {
+
+        results =
+            allDeals.filter(deal =>
+                normalSearch(deal, query)
+            );
+
+    }
+
+
+    /* -----------------------------------------------
+       RESULT COUNT
+    ------------------------------------------------ */
+
+    resultCount.textContent =
+        `${results.length} products found`;
+
+
+    displayProducts(results);
+
+}
+
+
+/* =====================================================
+   DISPLAY PRODUCTS
+===================================================== */
+
+function displayProducts(products) {
+
+    searchResults.innerHTML = "";
+
+
+    /* -----------------------------------------------
+       NO RESULTS
+    ------------------------------------------------ */
+
+    if (!products.length) {
+
+        searchResults.innerHTML = `
+
+            <div class="no-results">
+
+                <h2>
+                    😕 No products found
+                </h2>
+
+                <p>
+                    Try another product name or category.
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+    }
+
+
+    /* -----------------------------------------------
+       PRODUCTS
+    ------------------------------------------------ */
+
+    products.forEach(deal => {
+
+        const card =
+            document.createElement("div");
+
+
+        card.className =
+            "result-card";
+
+
+        const image =
+            deal.image || "";
+
+
+        const productName =
+            deal.productName || "Product";
+
+
+        const description =
+            deal.description || "";
+
+
+        const category =
+            deal.category || "Other";
+
+
+        const dealPrice =
+            Number(deal.dealPrice || 0);
+
+
+        const originalPrice =
+            Number(deal.originalPrice || 0);
+
+
+        const discount =
+            Number(deal.discount || 0);
+
+
+        const affiliateUrl =
+            deal.affiliateUrl || "#";
+
+
+        card.innerHTML = `
+
+            <div class="result-image">
+
+                <img
+                    src="${image}"
+                    alt="${productName}"
+                    onerror="this.style.display='none'"
+                >
+
+            </div>
+
+
+            <div class="result-info">
+
+                <span class="category-badge">
+                    ${category}
+                </span>
+
+
+                <h3>
+                    ${productName}
+                </h3>
+
+
+                <p>
+                    ${description}
+                </p>
+
+
+                <div class="price">
+
+                    ₹${dealPrice.toLocaleString("en-IN")}
+
+                    <del class="old-price">
+                        ₹${originalPrice.toLocaleString("en-IN")}
+                    </del>
+
+                    <span class="discount">
+                        ${discount}% OFF
+                    </span>
+
+                </div>
+
+
+                <a
+                    href="${affiliateUrl}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="view-btn"
+                >
+                    View Deal
+                </a>
+
+            </div>
+
+        `;
+
+
+        searchResults.appendChild(card);
+
+    });
+
+}
+
+
+/* =====================================================
+   SUGGESTIONS
+===================================================== */
+
+function createSuggestions() {
+
+    suggestionList.innerHTML = "";
+
+
+    const suggestions = [
+
+        "Phone",
+
+        "Laptop",
+
+        "Camera",
+
+        "Microphone",
+
+        "Clothing",
+
+        "Computer",
+
+        "Headphones"
+
+    ];
+
+
+    suggestions.forEach(item => {
+
+        const div =
+            document.createElement("div");
+
+
+        div.className =
+            "suggestion-item";
+
+
+        div.textContent =
+            "🔎 " + item;
+
+
+        div.addEventListener(
+            "click",
+            () => {
+
+                searchInput.value =
+                    item;
+
+                suggestionList.style.display =
+                    "none";
+
+                searchProducts();
+
+            }
+        );
+
+
+        suggestionList.appendChild(div);
+
+    });
+
+}
+
+
+/* =====================================================
+   INPUT SUGGESTIONS
+===================================================== */
+
+searchInput.addEventListener(
+    "input",
+    function() {
+
+        const value =
+            searchInput.value.trim().toLowerCase();
+
+
+        if (!value) {
+
+            createSuggestions();
+
+            suggestionList.style.display =
+                "block";
+
+            return;
+        }
+
+
+        const options = [
+
+            "Phone",
+
+            "Laptop",
+
+            "Camera",
+
+            "Microphone",
+
+            "Clothing",
+
+            "Computer",
+
+            "Headphones"
+
+        ];
+
+
+        const matches =
+            options.filter(item =>
+                item.toLowerCase()
+                    .includes(value)
+            );
+
+
+        suggestionList.innerHTML = "";
+
+
+        matches.forEach(item => {
+
+            const div =
+                document.createElement("div");
+
+
+            div.className =
+                "suggestion-item";
+
+
+            div.textContent =
+                "🔎 " + item;
+
+
+            div.addEventListener(
+                "click",
+                () => {
+
+                    searchInput.value =
+                        item;
+
+                    suggestionList.style.display =
+                        "none";
+
+                    searchProducts();
+
+                }
+            );
+
+
+            suggestionList.appendChild(div);
+
+        });
+
+
+        if (matches.length) {
+
+            suggestionList.style.display =
+                "block";
+
+        } else {
+
+            suggestionList.style.display =
+                "none";
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   FOCUS
+===================================================== */
+
+searchInput.addEventListener(
+    "focus",
+    function() {
+
+        if (!searchInput.value.trim()) {
+
+            createSuggestions();
+
+            suggestionList.style.display =
+                "block";
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   CLICK OUTSIDE
+===================================================== */
+
+document.addEventListener(
+    "click",
+    function(event) {
+
+        if (
+            !event.target.closest(".suggestions")
+        ) {
+
+            suggestionList.style.display =
+                "none";
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   SEARCH BUTTON
+===================================================== */
+
+searchButton.addEventListener(
+    "click",
+    function() {
+
+        suggestionList.style.display =
+            "none";
+
+        searchProducts();
+
+    }
+);
+
+
+/* =====================================================
+   ENTER
+===================================================== */
+
+searchInput.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (event.key === "Enter") {
+
+            event.preventDefault();
+
+            suggestionList.style.display =
+                "none";
+
+            searchProducts();
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   URL QUERY
+===================================================== */
+
+const urlParams =
+    new URLSearchParams(
+        window.location.search
+    );
+
+
+const initialQuery =
+    urlParams.get("q");
+
+
+if (initialQuery) {
+
+    searchInput.value =
+        initialQuery;
+
+}
+
+
+/* =====================================================
+   LOAD PRODUCTS
+===================================================== */
+
+async function loadProducts() {
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_URL}/api/deals`
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "API request failed"
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            data.success &&
+            Array.isArray(data.deals)
+        ) {
+
+            allDeals =
+                data.deals;
+
+
+            searchProducts();
+
+        } else {
+
+            searchResults.innerHTML = `
+
+                <div class="no-results">
+
+                    <h2>
+                        😕 No products available
+                    </h2>
+
+                    <p>
+                        Products could not be loaded.
+                    </p>
+
+                </div>
+
+            `;
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Product loading error:",
+            error
+        );
+
+
+        searchResults.innerHTML = `
+
+            <div class="no-results">
+
+                <h2>
+                    ❌ Unable to load products
+                </h2>
+
+                <p>
+                    Please try again later.
+                </p>
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+/* =====================================================
+   START
+===================================================== */
+
+loadProducts();
+
+</script>
+
+
+</body>
+
+</html>

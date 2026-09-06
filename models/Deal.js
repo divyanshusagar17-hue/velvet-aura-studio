@@ -12,9 +12,16 @@ const dealSchema = new mongoose.Schema({
         required: true
     },
 
+    // Old products ke liye ye field rakhi hai
     image: {
         type: String,
         required: true
+    },
+
+    // New products ke liye multiple images
+    images: {
+        type: [String],
+        default: []
     },
 
     originalPrice: {
@@ -45,6 +52,17 @@ const dealSchema = new mongoose.Schema({
     category: {
         type: String,
         default: "Other"
+    },
+
+    // Multiple tags
+    tags: {
+        type: [String],
+        default: []
+    },
+
+    amazonProductId: {
+        type: String,
+        default: ""
     },
 
     createdAt: {

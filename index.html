@@ -111,6 +111,39 @@ shopping decisions.
 
 </section>
 
+<!-- SEARCH -->
+
+<section id="search">
+
+    <div class="container">
+
+        <div class="search-area">
+
+            <h2>🔎 Find Your Product</h2>
+
+            <p>Search by product name, category or Amazon link</p>
+
+            <div class="search-box">
+
+                <input
+                    type="text"
+                    id="productSearch"
+                    placeholder="Search products..."
+                >
+
+                <button
+                    onclick="goToSearch()">
+                    Search
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
 <!-- FEATURED DEALS -->
 
 <section id="deals">
@@ -314,6 +347,30 @@ document.addEventListener('DOMContentLoaded', () => {
 <div class="cursor-glow"></div>
 
 <script type="module" src="firebase-auth.js"></script>
+
+<script>
+
+function goToSearch() {
+
+    const query =
+        document.getElementById("productSearch").value.trim();
+
+    window.location.href =
+        "search.html?q=" + encodeURIComponent(query);
+
+}
+
+document
+    .getElementById("productSearch")
+    .addEventListener("keydown", function(event) {
+
+        if (event.key === "Enter") {
+            goToSearch();
+        }
+
+    });
+
+</script>
 
 </body>
 </html>
