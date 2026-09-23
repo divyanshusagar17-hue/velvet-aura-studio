@@ -1,0 +1,1568 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Product Details | Velvet Aura Studio</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #ffffff;
+            color: #111827;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* =========================
+           NAVBAR
+        ========================= */
+
+        .navbar {
+            height: 72px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 5%;
+            background: #ffffff;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: 700;
+            color: #172554;
+        }
+
+        .logo span {
+            color: #ff7a00;
+        }
+
+        .nav-icons {
+            display: flex;
+            gap: 24px;
+            font-size: 24px;
+        }
+
+        /* =========================
+           BREADCRUMB
+        ========================= */
+
+        .breadcrumb {
+            max-width: 1400px;
+            margin: 22px auto;
+            padding: 0 25px;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .breadcrumb span {
+            color: #111827;
+            font-weight: 600;
+        }
+
+        /* =========================
+           MAIN PRODUCT
+        ========================= */
+
+        .product-container {
+            max-width: 1400px;
+            margin: auto;
+            padding: 10px 25px 60px;
+
+            display: grid;
+            grid-template-columns: 1.25fr 1fr;
+
+            gap: 45px;
+        }
+
+        /* =========================
+           IMAGE GALLERY
+        ========================= */
+
+        .gallery {
+            display: grid;
+            grid-template-columns: 90px 1fr;
+            gap: 18px;
+        }
+
+        .thumbnails {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .thumbnail {
+            width: 82px;
+            height: 82px;
+
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+
+            padding: 5px;
+
+            cursor: pointer;
+
+            background: #ffffff;
+        }
+
+        .thumbnail.active {
+            border-color: #315cff;
+        }
+
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+
+            object-fit: contain;
+
+            border-radius: 8px;
+        }
+
+        .main-image-box {
+            height: 520px;
+
+            background: #f8fafc;
+
+            border-radius: 16px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            overflow: hidden;
+        }
+
+        .main-image-box img {
+            width: 100%;
+            height: 100%;
+
+            object-fit: contain;
+        }
+
+        /* =========================
+           PRODUCT INFORMATION
+        ========================= */
+
+        .store-badge {
+            display: inline-flex;
+
+            align-items: center;
+            gap: 8px;
+
+            border: 1px solid #dbe3ef;
+
+            border-radius: 25px;
+
+            padding: 8px 15px;
+
+            margin-bottom: 15px;
+
+            font-weight: 600;
+        }
+
+        .amazon-logo {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .product-title {
+            font-size: 27px;
+            line-height: 1.35;
+
+            margin-bottom: 15px;
+
+            color: #111827;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+
+            gap: 10px;
+
+            margin-bottom: 22px;
+
+            color: #f97316;
+
+            font-size: 17px;
+        }
+
+        .rating-number {
+            color: #111827;
+            font-weight: 600;
+        }
+
+        .reviews {
+            color: #64748b;
+        }
+
+        /* =========================
+           PRICE
+        ========================= */
+
+        .price-row {
+            display: flex;
+            align-items: center;
+
+            gap: 15px;
+
+            margin-bottom: 10px;
+        }
+
+        .deal-price {
+            font-size: 38px;
+            font-weight: 700;
+
+            color: #050505;
+        }
+
+        .original-price {
+            font-size: 20px;
+
+            color: #94a3b8;
+
+            text-decoration: line-through;
+        }
+
+        .discount {
+            display: inline-block;
+
+            background: #dcfce7;
+
+            color: #16a34a;
+
+            font-weight: 700;
+
+            padding: 7px 13px;
+
+            border-radius: 20px;
+
+            margin-bottom: 20px;
+        }
+
+        /* =========================
+           DESCRIPTION
+        ========================= */
+
+        .description {
+            color: #475569;
+
+            line-height: 1.7;
+
+            font-size: 15px;
+
+            margin-bottom: 25px;
+        }
+
+        /* =========================
+           AMAZON BUTTON
+        ========================= */
+
+        .amazon-button {
+            width: 100%;
+
+            border: none;
+
+            background: #ff7614;
+
+            color: white;
+
+            padding: 18px;
+
+            border-radius: 13px;
+
+            font-size: 20px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        .amazon-button:hover {
+            background: #e85f00;
+
+            transform: translateY(-1px);
+        }
+
+        /* =========================
+           TRUST ROW
+        ========================= */
+
+        .trust-row {
+            display: grid;
+
+            grid-template-columns: repeat(3, 1fr);
+
+            border-top: 1px solid #e5e7eb;
+
+            border-bottom: 1px solid #e5e7eb;
+
+            margin-top: 25px;
+
+            padding: 18px 0;
+
+            gap: 10px;
+        }
+
+        .trust-box {
+            text-align: center;
+
+            color: #475569;
+
+            font-size: 13px;
+        }
+
+        .trust-box strong {
+            display: block;
+
+            color: #111827;
+
+            margin-bottom: 5px;
+        }
+
+        /* =========================
+           DEAL PANEL
+        ========================= */
+
+        .deal-panel {
+            margin-top: 30px;
+
+            border: 1px solid #dbe3ef;
+
+            border-radius: 15px;
+
+            overflow: hidden;
+
+            background: white;
+        }
+
+        .deal-tabs {
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .deal-tab {
+            padding: 18px;
+
+            text-align: center;
+
+            border-bottom: 1px solid #dbe3ef;
+
+            font-size: 18px;
+
+            color: #52637a;
+        }
+
+        .deal-tab.active {
+            color: #4f46e5;
+
+            border-bottom: 2px solid #4f46e5;
+        }
+
+        .deal-content {
+            padding: 25px;
+        }
+
+        .deal-content h2 {
+            font-size: 21px;
+
+            margin-bottom: 18px;
+        }
+
+        /* =========================
+           BUY RECOMMENDATION
+        ========================= */
+
+        .buy-timing {
+            margin-bottom: 25px;
+        }
+
+        .buy-timing h3 {
+            font-size: 19px;
+
+            margin-bottom: 15px;
+        }
+
+        .timing-options {
+            display: flex;
+
+            gap: 10px;
+
+            flex-wrap: wrap;
+        }
+
+        .timing-option {
+            border: 1px solid #dbe3ef;
+
+            border-radius: 20px;
+
+            padding: 8px 14px;
+
+            color: #111827;
+
+            font-size: 14px;
+        }
+
+        .timing-option.active {
+            color: #4f46e5;
+
+            border-color: #c7d2fe;
+
+            background: #f5f7ff;
+        }
+
+        .recommendation {
+            display: flex;
+
+            align-items: center;
+
+            gap: 25px;
+
+            margin-bottom: 30px;
+        }
+
+        .gauge {
+            width: 150px;
+
+            height: 80px;
+
+            border-radius: 150px 150px 0 0;
+
+            background: conic-gradient(
+                from 270deg,
+                #ef4444 0deg 55deg,
+                #facc15 55deg 110deg,
+                #22c55e 110deg 180deg
+            );
+
+            position: relative;
+        }
+
+        .gauge::after {
+            content: "";
+
+            position: absolute;
+
+            left: 50%;
+
+            bottom: 0;
+
+            transform: translateX(-50%);
+
+            width: 120px;
+
+            height: 60px;
+
+            background: white;
+
+            border-radius: 120px 120px 0 0;
+        }
+
+        .gauge-dot {
+            position: absolute;
+
+            width: 17px;
+            height: 17px;
+
+            background: white;
+
+            border: 4px solid #3730a3;
+
+            border-radius: 50%;
+
+            left: 50%;
+
+            bottom: -8px;
+
+            transform: translateX(-50%);
+
+            z-index: 2;
+        }
+
+        .recommendation-text small {
+            color: #64748b;
+
+            display: block;
+
+            margin-bottom: 8px;
+        }
+
+        .recommendation-text strong {
+            display: block;
+
+            color: #16a34a;
+
+            font-size: 21px;
+
+            margin-bottom: 6px;
+        }
+
+        .recommendation-text span {
+            color: #64748b;
+
+            font-size: 14px;
+        }
+
+        /* =========================
+           PRICE STATS
+        ========================= */
+
+        .price-stats-title {
+            font-size: 21px;
+
+            margin-bottom: 18px;
+        }
+
+        .price-stats {
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 8px;
+        }
+
+        .stat-card {
+            background: #f1f5f9;
+
+            border-radius: 7px;
+
+            padding: 22px 15px;
+
+            text-align: center;
+
+            min-height: 95px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: center;
+        }
+
+        .stat-card.special-yellow {
+            background: #fffbea;
+
+            border: 1px solid #facc15;
+        }
+
+        .stat-card.special-blue {
+            background: #eff6ff;
+
+            border: 1px solid #60a5fa;
+        }
+
+        .stat-title {
+            color: #64748b;
+
+            font-size: 14px;
+
+            margin-bottom: 8px;
+        }
+
+        .stat-price {
+            color: #111827;
+
+            font-size: 19px;
+
+            font-weight: 700;
+        }
+
+        /* =========================
+           LOADING / ERROR
+        ========================= */
+
+        .loading {
+            text-align: center;
+
+            padding: 100px 20px;
+
+            font-size: 20px;
+        }
+
+        .error {
+            text-align: center;
+
+            padding: 100px 20px;
+
+            color: #dc2626;
+        }
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 900px) {
+
+            .product-container {
+                grid-template-columns: 1fr;
+
+                gap: 25px;
+            }
+
+            .main-image-box {
+                height: 430px;
+            }
+
+            .product-title {
+                font-size: 23px;
+            }
+
+        }
+
+        @media (max-width: 600px) {
+
+            .navbar {
+                padding: 0 18px;
+            }
+
+            .logo {
+                font-size: 20px;
+            }
+
+            .breadcrumb {
+                padding: 0 15px;
+            }
+
+            .product-container {
+                padding: 10px 15px 35px;
+            }
+
+            .gallery {
+                grid-template-columns: 65px 1fr;
+
+                gap: 10px;
+            }
+
+            .thumbnail {
+                width: 60px;
+                height: 60px;
+            }
+
+            .main-image-box {
+                height: 330px;
+            }
+
+            .deal-price {
+                font-size: 30px;
+            }
+
+            .original-price {
+                font-size: 16px;
+            }
+
+            .trust-row {
+                grid-template-columns: 1fr;
+            }
+
+            .price-stats {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .recommendation {
+                flex-direction: column;
+
+                align-items: flex-start;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================
+         NAVBAR
+    ========================= -->
+
+    <header class="navbar">
+
+        <div class="logo">
+            Velvet Aura Studio 
+        </div>
+
+        <div class="nav-icons">
+
+            <span>⌕</span>
+
+            <span>🛒</span>
+
+            <span>☰</span>
+
+        </div>
+
+    </header>
+
+
+    <!-- PRODUCT PAGE -->
+
+    <div id="page">
+
+        <div class="loading">
+            Loading product...
+        </div>
+
+    </div>
+
+
+    <script>
+
+        const API_URL =
+            "https://velvet-aura-studio.onrender.com/api/deals";
+
+
+        const params =
+            new URLSearchParams(
+                window.location.search
+            );
+
+
+        const productId =
+            params.get("id");
+
+
+        let currentAffiliateUrl = "#";
+
+
+        /* =========================
+           LOAD PRODUCT
+        ========================= */
+
+        async function loadProduct() {
+
+            const page =
+                document.getElementById("page");
+
+
+            if (!productId) {
+
+                page.innerHTML = `
+
+                    <div class="error">
+
+                        <h2>
+                            Product not found
+                        </h2>
+
+                        <p>
+                            No product ID was provided.
+                        </p>
+
+                    </div>
+
+                `;
+
+                return;
+            }
+
+
+            try {
+
+                const response =
+                    await fetch(API_URL);
+
+
+                const data =
+                    await response.json();
+
+
+                if (!data.success) {
+
+                    throw new Error(
+                        "Failed to load products"
+                    );
+
+                }
+
+
+                const product =
+                    data.deals.find(
+                        deal =>
+                            String(deal._id) ===
+                            String(productId)
+                    );
+
+
+                if (!product) {
+
+                    page.innerHTML = `
+
+                        <div class="error">
+
+                            <h2>
+                                Product not found
+                            </h2>
+
+                            <p>
+                                This product may have been removed.
+                            </p>
+
+                        </div>
+
+                    `;
+
+                    return;
+                }
+
+
+                renderProduct(product);
+
+            }
+
+            catch (error) {
+
+                console.error(error);
+
+
+                page.innerHTML = `
+
+                    <div class="error">
+
+                        <h2>
+                            Unable to load product
+                        </h2>
+
+                        <p>
+                            Please try again later.
+                        </p>
+
+                    </div>
+
+                `;
+
+            }
+
+        }
+
+
+        /* =========================
+           RENDER PRODUCT
+        ========================= */
+
+        function renderProduct(product) {
+
+
+            let images = [];
+
+
+            if (
+                Array.isArray(product.images) &&
+                product.images.length > 0
+            ) {
+
+                images =
+                    product.images.filter(Boolean);
+
+            }
+
+
+            if (
+                images.length === 0 &&
+                product.image
+            ) {
+
+                images = [
+                    product.image
+                ];
+
+            }
+
+
+            const firstImage =
+                images[0] || "";
+
+
+            const dealPrice =
+                Number(
+                    product.dealPrice || 0
+                );
+
+
+            const originalPrice =
+                Number(
+                    product.originalPrice || 0
+                );
+
+
+            const discount =
+                Number(
+                    product.discount || 0
+                );
+
+
+            const savings =
+                originalPrice - dealPrice;
+
+
+            currentAffiliateUrl =
+                product.affiliateUrl || "#";
+
+
+            document.title =
+                product.productName +
+                " | Velvet Aura Studio";
+
+
+            document.getElementById("page").innerHTML = `
+
+
+                <!-- =========================
+                     BREADCRUMB
+                ========================= -->
+
+                <div class="breadcrumb">
+
+                    Home
+
+                    &nbsp;›&nbsp;
+
+                    ${escapeHTML(
+                        product.category ||
+                        "Products"
+                    )}
+
+                    &nbsp;›&nbsp;
+
+                    <span>
+                        ${escapeHTML(
+                            product.productName
+                        )}
+                    </span>
+
+                </div>
+
+
+                <!-- =========================
+                     MAIN PRODUCT
+                ========================= -->
+
+                <main class="product-container">
+
+
+                    <!-- =========================
+                         IMAGE GALLERY
+                    ========================= -->
+
+                    <section class="gallery">
+
+
+                        <div class="thumbnails">
+
+
+                            ${
+                                images
+                                    .map(
+                                        (
+                                            image,
+                                            index
+                                        ) => `
+
+                                            <div
+                                                class="thumbnail ${
+                                                    index === 0
+                                                        ? "active"
+                                                        : ""
+                                                }"
+
+                                                onclick="
+                                                    changeImage(
+                                                        '${escapeAttribute(image)}',
+                                                        this
+                                                    )
+                                                "
+                                            >
+
+                                                <img
+                                                    src="${escapeAttribute(image)}"
+
+                                                    alt="${escapeAttribute(
+                                                        product.productName
+                                                    )}"
+                                                >
+
+                                            </div>
+
+                                        `
+                                    )
+                                    .join("")
+                            }
+
+
+                        </div>
+
+
+                        <div class="main-image-box">
+
+
+                            <img
+                                id="mainProductImage"
+
+                                src="${escapeAttribute(
+                                    firstImage
+                                )}"
+
+                                alt="${escapeAttribute(
+                                    product.productName
+                                )}"
+                            >
+
+
+                        </div>
+
+
+                    </section>
+
+
+                    <!-- =========================
+                         PRODUCT INFORMATION
+                    ========================= -->
+
+                    <section>
+
+
+                        <!-- STORE -->
+
+                        <div class="store-badge">
+
+                            <span class="amazon-logo">
+                                a
+                            </span>
+
+                            ${escapeHTML(
+                                product.store ||
+                                "Amazon"
+                            )}
+
+                        </div>
+
+
+                        <!-- PRODUCT NAME -->
+
+                        <h1 class="product-title">
+
+                            ${escapeHTML(
+                                product.productName
+                            )}
+
+                        </h1>
+
+
+                        <!-- RATING -->
+
+                        <div class="rating">
+
+                            <span>
+                                ★★★★★
+                            </span>
+
+                            <span class="rating-number">
+                                Deal
+                            </span>
+
+                            <span class="reviews">
+
+                                ${escapeHTML(
+                                    product.category ||
+                                    ""
+                                )}
+
+                            </span>
+
+                        </div>
+
+
+                        <!-- PRICE -->
+
+                        <div class="price-row">
+
+
+                            <span class="deal-price">
+
+                                ₹${dealPrice.toLocaleString(
+                                    "en-IN"
+                                )}
+
+                            </span>
+
+
+                            ${
+                                originalPrice >
+                                dealPrice
+
+                                    ? `
+
+                                        <span class="original-price">
+
+                                            ₹${originalPrice.toLocaleString(
+                                                "en-IN"
+                                            )}
+
+                                        </span>
+
+                                    `
+
+                                    : ""
+                            }
+
+
+                        </div>
+
+
+                        <!-- DISCOUNT -->
+
+                        ${
+                            discount > 0
+
+                                ? `
+
+                                    <div class="discount">
+
+                                        ↓ ${discount}% OFF
+
+                                    </div>
+
+                                `
+
+                                : ""
+                        }
+
+
+                        <!-- DESCRIPTION -->
+
+                        <p class="description">
+
+                            ${escapeHTML(
+                                product.description ||
+                                "Check the product details and current deal on Amazon."
+                            )}
+
+                        </p>
+
+
+                        <!-- AMAZON BUTTON -->
+
+                        <button
+                            class="amazon-button"
+
+                            onclick="
+                                openAmazon()
+                            "
+                        >
+
+                            Buy on Amazon
+
+                        </button>
+
+
+                        <!-- TRUST -->
+
+                        <div class="trust-row">
+
+
+                            <div class="trust-box">
+
+                                <strong>
+                                    🔒 Secure
+                                </strong>
+
+                                Safe shopping
+
+                            </div>
+
+
+                            <div class="trust-box">
+
+                                <strong>
+                                    🏷️ Deal
+                                </strong>
+
+                                ${
+                                    discount > 0
+                                        ? discount +
+                                          "% OFF"
+                                        : "Current Deal"
+                                }
+
+                            </div>
+
+
+                            <div class="trust-box">
+
+                                <strong>
+                                    🛒 ${escapeHTML(
+                                        product.store ||
+                                        "Amazon"
+                                    )}
+                                </strong>
+
+                                Visit Store
+
+                            </div>
+
+
+                        </div>
+
+
+                        <!-- =========================
+                             DEAL SCANNER
+                        ========================= -->
+
+                        <div class="deal-panel">
+
+
+                            <!-- TABS -->
+
+                            <div class="deal-tabs">
+
+                                <div class="deal-tab active">
+
+                                    Deal Scanner
+
+                                </div>
+
+
+                                <div class="deal-tab">
+
+                                    Price Drop
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="deal-content">
+
+
+                                <!-- BUY TIMING -->
+
+                                <div class="buy-timing">
+
+                                    <h3>
+                                        Should you buy now?
+                                    </h3>
+
+
+                                    <div class="timing-options">
+
+                                        <div class="timing-option active">
+                                            2-3 Days
+                                        </div>
+
+                                        <div class="timing-option">
+                                            1 Week
+                                        </div>
+
+                                        <div class="timing-option">
+                                            1 Month
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- RECOMMENDATION -->
+
+                                <div class="recommendation">
+
+
+                                    <div class="gauge">
+
+                                        <div class="gauge-dot"></div>
+
+                                    </div>
+
+
+                                    <div class="recommendation-text">
+
+                                        <small>
+                                            Our Recommendation
+                                        </small>
+
+
+                                        <strong>
+                                            Go Ahead & Buy now
+                                        </strong>
+
+
+                                        <span>
+                                            Based on current deal price
+                                        </span>
+
+                                    </div>
+
+
+                                </div>
+
+
+                                <!-- PRICE STATS -->
+
+                                <h2 class="price-stats-title">
+
+                                    Price Stats
+
+                                </h2>
+
+
+                                <div class="price-stats">
+
+
+                                    <!-- ORIGINAL / HIGHEST -->
+
+                                    <div class="stat-card">
+
+                                        <div class="stat-title">
+                                            Highest Price ↑
+                                        </div>
+
+                                        <div class="stat-price">
+
+                                            ₹${originalPrice.toLocaleString(
+                                                "en-IN"
+                                            )}
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <!-- AVERAGE -->
+
+                                    <div class="stat-card">
+
+                                        <div class="stat-title">
+                                            Current Price
+                                        </div>
+
+                                        <div class="stat-price">
+
+                                            ₹${dealPrice.toLocaleString(
+                                                "en-IN"
+                                            )}
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <!-- LOWEST -->
+
+                                    <div class="stat-card">
+
+                                        <div class="stat-title">
+                                            Current Deal ↓
+                                        </div>
+
+                                        <div class="stat-price">
+
+                                            ₹${dealPrice.toLocaleString(
+                                                "en-IN"
+                                            )}
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <!-- SAVING -->
+
+                                    <div class="stat-card special-yellow">
+
+                                        <div class="stat-title">
+                                            You Save
+                                        </div>
+
+                                        <div class="stat-price">
+
+                                            ₹${Math.max(
+                                                savings,
+                                                0
+                                            ).toLocaleString(
+                                                "en-IN"
+                                            )}
+
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+
+
+                    </section>
+
+
+                </main>
+
+            `;
+
+        }
+
+
+        /* =========================
+           CHANGE IMAGE
+        ========================= */
+
+        function changeImage(
+            image,
+            element
+        ) {
+
+
+            const mainImage =
+                document.getElementById(
+                    "mainProductImage"
+                );
+
+
+            if (mainImage) {
+
+                mainImage.src =
+                    image;
+
+            }
+
+
+            document
+                .querySelectorAll(
+                    ".thumbnail"
+                )
+                .forEach(
+                    thumbnail => {
+
+                        thumbnail.classList.remove(
+                            "active"
+                        );
+
+                    }
+                );
+
+
+            element.classList.add(
+                "active"
+            );
+
+        }
+
+
+        /* =========================
+           AMAZON
+        ========================= */
+
+        function openAmazon() {
+
+
+            if (
+                currentAffiliateUrl &&
+                currentAffiliateUrl !== "#"
+            ) {
+
+                window.open(
+                    currentAffiliateUrl,
+                    "_blank"
+                );
+
+            }
+
+            else {
+
+                alert(
+                    "Amazon product link is not available."
+                );
+
+            }
+
+        }
+
+
+        /* =========================
+           SECURITY / HTML ESCAPE
+        ========================= */
+
+        function escapeHTML(
+            value
+        ) {
+
+            return String(
+                value ?? ""
+            )
+
+                .replace(
+                    /&/g,
+                    "&amp;"
+                )
+
+                .replace(
+                    /</g,
+                    "&lt;"
+                )
+
+                .replace(
+                    />/g,
+                    "&gt;"
+                )
+
+                .replace(
+                    /"/g,
+                    "&quot;"
+                )
+
+                .replace(
+                    /'/g,
+                    "&#039;"
+                );
+
+        }
+
+
+        function escapeAttribute(
+            value
+        ) {
+
+            return escapeHTML(
+                value
+            );
+
+        }
+
+
+        /* =========================
+           START
+        ========================= */
+
+        loadProduct();
+
+    </script>
+
+</body>
+
+</html>

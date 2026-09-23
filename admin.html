@@ -701,6 +701,40 @@
                     >
 
                 </div>
+                 
+
+                <!-- IMAGE 6 -->
+
+                <div class="form-group">
+
+                    <label>
+                        Image URL 6
+                    </label>
+
+                    <input
+                        type="url"
+                        id="image6"
+                        placeholder="Optional"
+                    >
+
+                </div>
+
+
+                <!-- IMAGE 7 -->
+
+                <div class="form-group">
+
+                    <label>
+                        Image URL 7
+                    </label>
+
+                    <input
+                        type="url"
+                        id="image7"
+                        placeholder="Optional"
+                    >
+
+                </div>
 
 
                 <!-- ORIGINAL PRICE -->
@@ -753,7 +787,7 @@
                         type="number"
                         id="discount"
                         placeholder="33"
-                        min="0"
+                        min="-100"
                         max="100"
                         required
                     >
@@ -1147,6 +1181,14 @@ form.addEventListener(
 
             document
                 .getElementById("image5")
+                .value
+                .trim(),
+            document
+                .getElementById("image6")
+                .value
+                .trim(),
+            document
+                .getElementById("image7")
                 .value
                 .trim()
 
@@ -1889,7 +1931,7 @@ function editDeal(id) {
 
     for (
         let i = 1;
-        i <= 5;
+        i <= 7;
         i++
     ) {
 

@@ -70,11 +70,10 @@ async function loadDeals() {
                         <span> ${deal.discount}% OFF</span>
                     </p>
 
-                    <a href="${deal.affiliateUrl}"
-                       target="_blank"
+                    <a href="product-details.html?id=${deal._id}"
                        class="project-btn">
-                        View Deal
-                    </a>
+                         Buy Now
+                     </a>
 
                 </div>
             `;
@@ -248,11 +247,10 @@ async function searchProducts() {
                     </p>
 
                     <a
-                        href="${deal.affiliateUrl}"
-                        target="_blank"
+                        href="product-details.html?id=${deal._id}"
                         class="project-btn"
                     >
-                        View Deal
+                        Buy Now
                     </a>
 
                 </div>
