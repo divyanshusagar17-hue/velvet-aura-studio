@@ -46,8 +46,6 @@
 
     <a href="#deals">🔥 Deals</a>
 
-    <a href="#products">🛍️ Products</a>
-
     <a href="#about">ℹ️ About</a>
 
     <a href="login.html" id="loginBtn">🔑 Login</a>
@@ -60,83 +58,23 @@
 
 <section class="hero container" id="home">
 
-<div class="hero-content"> 
+    <div class="hero-content">
 
-<div class="badge">
-Discover Better Deals
-</div>
+        <div class="badge">
+            Discover Better Deals
+        </div>
 
-<h1>
-    Find Better
-    <span>Deals & Products</span>
-</h1>
+        <div class="hero-search">
 
-<h3>Welcome to Velvet Aura Studio</h3>
+            <input
+                type="text"
+                id="productSearch"
+                placeholder="Search products, deals & categories..."
+            >
 
-<p>
-Discover useful products, explore deals and compare options
-before you buy. Velvet Aura Studio helps you make smarter
-shopping decisions.
-</p>
-
-<div class="hero-buttons">
-    <a href="#deals" class="btn primary">Explore Deals</a>
-    <a href="#about" class="btn secondary">Learn More</a>
-</div>
-
-<div class="stats">
-
-    <div class="stat">
-        <h3>100+</h3>
-        <p>Products</p>
-    </div>
-
-    <div class="stat">
-        <h3>50+</h3>
-        <p>Deals</p>
-    </div>
-
-    <div class="stat">
-        <h3>24/7</h3>
-        <p>Discover</p>
-    </div>
-
-</div>
-
-</div>
-
-<div class="hero-image">
-    
-</div>
-
-</section>
-
-<!-- SEARCH -->
-
-<section id="search">
-
-    <div class="container">
-
-        <div class="search-area">
-
-            <h2>🔎 Find Your Product</h2>
-
-            <p>Search by product name, category or Amazon link</p>
-
-            <div class="search-box">
-
-                <input
-                    type="text"
-                    id="productSearch"
-                    placeholder="Search products..."
-                >
-
-                <button
-                    onclick="goToSearch()">
-                    Search
-                </button>
-
-            </div>
+            <button onclick="goToSearch()">
+                Search
+            </button>
 
         </div>
 
@@ -152,88 +90,7 @@ shopping decisions.
 
         <h2 class="section-title">🔥 Featured Deals</h2>
 
-        <div class="projects-grid" id="dealsContainer">
-        </div>
-
-    </div>
-
-</section>
-
-<!-- PRODUCTS -->
-
-<section id="products">
-
-    <div class="container">
-
-        <h2 class="section-title">🛍️ Popular Products</h2>
-
-        <div class="projects-grid" id="productsContainer">
-
-            <div class="project-card">
-
-                <div class="project-image"></div>
-
-                <div class="project-content">
-
-                    <h3>Electronics</h3>
-
-                    <p>
-                        Explore smartphones, headphones, laptops
-                        and other popular electronics.
-                    </p>
-
-                    <a href="#" class="project-btn">
-                        Explore Products
-                    </a>
-
-                </div>
-
-            </div>
-
-
-            <div class="project-card">
-
-                <div class="project-image"></div>
-
-                <div class="project-content">
-
-                    <h3>Fashion</h3>
-
-                    <p>
-                        Discover trending fashion products,
-                        clothing and accessories.
-                    </p>
-
-                    <a href="#" class="project-btn">
-                        Explore Products
-                    </a>
-
-                </div>
-
-            </div>
-
-
-            <div class="project-card">
-
-                <div class="project-image"></div>
-
-                <div class="project-content">
-
-                    <h3>Home & Lifestyle</h3>
-
-                    <p>
-                        Find useful products for your home,
-                        lifestyle and everyday needs.
-                    </p>
-
-                    <a href="#" class="project-btn">
-                        Explore Products
-                    </a>
-
-                </div>
-
-            </div>
-
+        <div id="dealsContainer" class="category-deals-grid">
         </div>
 
     </div>

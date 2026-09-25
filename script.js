@@ -31,64 +31,355 @@ console.log("Sidebar JS Loaded");
 // LOAD DEALS FROM BACKEND
 
 async function loadDeals() {
+
     try {
-        const response = await fetch("https://velvet-aura-studio.onrender.com/api/deals");
+
+        const response = await fetch(
+            "https://velvet-aura-studio.onrender.com/api/deals"
+        );
+
         const data = await response.json();
 
-        const dealsContainer = document.getElementById("dealsContainer");
+        const dealsContainer =
+            document.getElementById("dealsContainer");
 
         if (!dealsContainer) return;
 
         dealsContainer.innerHTML = "";
 
-        if (!data.success || !data.deals || data.deals.length === 0) {
-            dealsContainer.innerHTML = "<p>No deals available.</p>";
+        if (
+            !data.success ||
+            !data.deals ||
+            data.deals.length === 0
+        ) {
+
+            dealsContainer.innerHTML =
+                "<p>No deals available.</p>";
+
             return;
         }
 
-        data.deals.forEach((deal) => {
-             
-            const card = document.createElement("div");
-            card.className = "project-card";
 
-            card.innerHTML = `
-                <div class="project-image">
-                    <img src="${deal.image}" alt="${deal.productName}">
-                </div>
+        // =========================
+        // GROUP PRODUCTS BY CATEGORY
+        // =========================
 
-                <div class="project-content">
+        const categories = {};
 
-                    <h3>${deal.productName}</h3>
 
-                    <p>
-                        ${deal.description}
-                    </p>
+// =========================
+// CATEGORY NORMALIZATION
+// =========================
 
-                    <p>
-                        <del>₹${deal.originalPrice.toLocaleString("en-IN")}</del>
-                        <strong> ₹${deal.dealPrice.toLocaleString("en-IN")}</strong>
-                        <span> ${deal.discount}% OFF</span>
-                    </p>
+function normalizeCategory(category) {
 
-                    <a href="product-details.html?id=${deal._id}"
-                       class="project-btn">
-                         Buy Now
-                     </a>
+    const value = (category || "")
+        .trim()
+        .toLowerCase();
 
-                </div>
-            `;
-
-            dealsContainer.appendChild(card);
-        });
-
-    } catch (error) {
-        console.error("Error loading deals:", error);
+    // Electronics
+    if (
+        value === "electronics" ||
+        value === "electronics & accessories" ||
+        value === "electronics accessories"
+    ) {
+        return "Electronics";
     }
+
+
+    // Computers
+    if (
+        value === "computers & laptops" ||
+        value === "computer & accessories" ||
+        value === "computers & accessories" ||
+        value === "computer accessories"
+    ) {
+        return "Computers & Laptops";
+    }
+
+
+    // Sports
+    if (
+        value === "sports & fitness" ||
+        value === "sports, fitness & outdoors" ||
+        value === "sports fitness & outdoors" ||
+        value === "sports & fitness & outdoors"
+    ) {
+        return "Sports & Fitness";
+    }
+
+
+    // Mobile
+    if (
+        value === "mobile" ||
+        value === "mobiles" ||
+        value === "mobile & accessories" ||
+        value === "mobile accessories"
+    ) {
+        return "Mobile & Accessories";
+    }
+
+
+    // Camera
+    if (
+        value === "camera" ||
+        value === "cameras" ||
+        value === "camera & photography"
+    ) {
+        return "Camera & Photography";
+    }
+
+
+    // Audio
+    if (
+        value === "audio" ||
+        value === "audio & accessories" ||
+        value === "headphones" ||
+        value === "headphones & earphones"
+    ) {
+        return "Audio";
+    }
+
+
+    // Fashion
+    if (
+        value === "fashion" ||
+        value === "fashion & clothing" ||
+        value === "clothing" ||
+        value === "clothes"
+    ) {
+        return "Fashion & Clothing";
+    }
+
+
+    // Home
+    if (
+        value === "home" ||
+        value === "home & kitchen" ||
+        value === "home & lifestyle"
+    ) {
+        return "Home & Kitchen";
+    }
+
+
+    // Beauty
+    if (
+        value === "beauty" ||
+        value === "beauty & personal care"
+    ) {
+        return "Beauty & Personal Care";
+    }
+
+
+    // Otherwise keep original category
+    return category.trim() || "Other";
 }
 
 
+// =========================
+// GROUP PRODUCTS
+// =========================
+
+data.deals.forEach((deal) => {
+
+    const category =
+        normalizeCategory(deal.category);
+
+    if (!categories[category]) {
+
+        categories[category] = [];
+
+    }
+
+    categories[category].push(deal);
+
+});
+
+
+        // =========================
+        // CATEGORY ORDER
+        // =========================
+
+        const categoryOrder = [
+
+            "Electronics",
+            "Mobile & Accessories",
+            "Computers & Laptops",
+            "Camera & Photography",
+            "Audio",
+            "Home & Kitchen",
+            "Fashion & Clothing",
+            "Beauty & Personal Care",
+            "Sports & Fitness",
+            "Toys & Games",
+            "Books",
+            "Office Products",
+            "Automotive",
+            "Grocery",
+            "Health & Household",
+            "Other"
+
+        ];
+
+
+        // =========================
+        // SORT CATEGORIES
+        // =========================
+
+        const sortedCategories =
+            Object.keys(categories).sort((a, b) => {
+
+                const aIndex =
+                    categoryOrder.indexOf(a);
+
+                const bIndex =
+                    categoryOrder.indexOf(b);
+
+                if (
+                    aIndex === -1 &&
+                    bIndex === -1
+                ) {
+
+                    return a.localeCompare(b);
+
+                }
+
+                if (aIndex === -1) return 1;
+
+                if (bIndex === -1) return -1;
+
+                return aIndex - bIndex;
+
+            });
+
+
+        // =========================
+        // CREATE CATEGORY BOX
+        // =========================
+
+        sortedCategories.forEach((category) => {
+
+            const products =
+                categories[category];
+
+            if (!products.length) return;
+
+
+            const categoryBox =
+                document.createElement("div");
+
+            categoryBox.className =
+                "category-deal-box";
+
+
+            categoryBox.innerHTML = `
+
+                <div class="category-deal-header">
+
+                    <h3>
+                        ${category}
+                    </h3>
+
+                    <a
+                        href="search.html?q=${encodeURIComponent(category)}"
+                        class="category-see-all"
+                    >
+                        →
+                    </a>
+
+                </div>
+
+                <div class="category-products">
+                </div>
+
+            `;
+
+
+            const productsContainer =
+                categoryBox.querySelector(
+                    ".category-products"
+                );
+
+
+            // =========================
+            // ONLY 4 PRODUCTS
+            // =========================
+
+            products
+                .slice(0, 4)
+                .forEach((deal) => {
+
+                    const product =
+                        document.createElement("div");
+
+                    product.className =
+                        "category-product";
+
+
+                    product.innerHTML = `
+
+                        <a
+                            href="product-details.html?id=${deal._id}"
+                            class="category-product-link"
+                        >
+
+                            <div class="category-product-image">
+
+                                <img
+                                    src="${deal.image}"
+                                    alt="${deal.productName}"
+                                    loading="lazy"
+                                >
+
+                            </div>
+
+                            <div class="category-product-name">
+                                ${deal.productName}
+                            </div>
+
+                            <div class="category-product-price">
+
+                                ₹${Number(
+                                    deal.dealPrice
+                                ).toLocaleString("en-IN")}
+
+                            </div>
+
+                        </a>
+
+                    `;
+
+                    productsContainer.appendChild(
+                        product
+                    );
+
+                });
+
+
+            dealsContainer.appendChild(
+                categoryBox
+            );
+
+        });
+
+
+    } catch (error) {
+
+        console.error(
+            "Error loading deals:",
+            error
+        );
+
+    }
+
+}
+
 // Load deals when page opens
-document.addEventListener("DOMContentLoaded", loadDeals);
+
+document.addEventListener(
+    "DOMContentLoaded",
+    loadDeals
+);
 
 // =========================
 // PRODUCT SEARCH
