@@ -1336,3 +1336,498 @@ footer {
     }
 
 }
+
+.fashion-banner {
+    width: 160px;
+    max-width: 100%;
+    margin: 20px auto;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.fashion-banner img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+/* ===== VELVET AURA WHITE THEME ===== */
+
+body {
+    background: #ffffff !important;
+    color: #171717 !important;
+}
+
+nav {
+    background: #ffffff !important;
+    border-bottom: 1px solid #eeeeee !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+}
+
+.logo {
+    color: #171717 !important;
+}
+
+.menu-btn {
+    color: #171717 !important;
+}
+
+.hero {
+    background: #ffffff !important;
+    color: #171717 !important;
+}
+
+.hero h1,
+.hero h2,
+.hero h3,
+.hero p {
+    color: #171717 !important;
+}
+
+.badge {
+    background: #f5f5f5 !important;
+    color: #171717 !important;
+    border: 1px solid #e5e5e5 !important;
+}
+
+.hero-search,
+.search-area,
+.search-box {
+    background: #ffffff !important;
+    color: #171717 !important;
+    border-color: #e5e5e5 !important;
+}
+
+.search-box input {
+    background: #ffffff !important;
+    color: #171717 !important;
+    border: 1px solid #dddddd !important;
+}
+
+.search-box input::placeholder {
+    color: #888888 !important;
+}
+
+.search-box button {
+    background: #171717 !important;
+    color: #ffffff !important;
+}
+
+section {
+    color: #171717;
+}
+
+.section-title {
+    color: #171717 !important;
+}
+
+.category-deal-box,
+.project-card {
+    background: #ffffff !important;
+    color: #171717 !important;
+    border: 1px solid #eeeeee !important;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.06) !important;
+}
+
+.category-deal-header h3,
+.category-product-name,
+.category-product-price,
+.project-content h3,
+.project-content p {
+    color: #171717 !important;
+}
+
+.category-product {
+    background: #f8f8f8 !important;
+}
+
+.project-btn,
+.btn.primary {
+    background: #171717 !important;
+    color: #ffffff !important;
+}
+
+.btn.secondary {
+    background: #ffffff !important;
+    color: #171717 !important;
+    border: 1px solid #171717 !important;
+}
+
+.sidebar {
+    background: #ffffff !important;
+    border-right: 1px solid #eeeeee !important;
+}
+
+.sidebar a {
+    color: #171717 !important;
+}
+
+.sidebar a:hover {
+    background: #f5f5f5 !important;
+}
+
+.overlay {
+    background: rgba(0,0,0,0.35) !important;
+}
+
+#about,
+footer {
+    background: #ffffff !important;
+    color: #171717 !important;
+}
+
+#about p,
+footer p,
+.footer-links a {
+    color: #555555 !important;
+}
+
+.fashion-banner {
+    background: #ffffff !important;
+}
+
+/* SEARCH BAR - WHITE PREMIUM STYLE */
+
+.hero-search {
+    background: #ffffff;
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+    padding: 8px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+    display: flex;
+    gap: 8px;
+    max-width: 700px;
+    width: 100%;
+    margin: 25px auto 0;
+}
+
+.hero-search input {
+    flex: 1;
+    background: #ffffff;
+    color: #222222;
+    border: none;
+    outline: none;
+    padding: 15px 18px;
+    font-size: 15px;
+}
+
+.hero-search input::placeholder {
+    color: #999999;
+}
+
+.hero-search button {
+    background: #111111;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 14px 28px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.hero-search button:hover {
+    background: #444444;
+}
+
+/* MOBILE */
+@media (max-width: 600px) {
+    .hero-search {
+        padding: 6px;
+        gap: 5px;
+    }
+
+    .hero-search input {
+        padding: 12px 10px;
+        font-size: 13px;
+        min-width: 0;
+    }
+
+    .hero-search button {
+        padding: 12px 17px;
+        font-size: 13px;
+    }
+}
+
+/* HERO KI EXTRA SPACE KAM KARO */
+.hero {
+    min-height: auto !important;
+    height: auto !important;
+    padding-top: 35px !important;
+    padding-bottom: 15px !important;
+    margin-bottom: 0 !important;
+}
+
+/* BADGE AUR SEARCH PAAS */
+.hero-content {
+    width: 100%;
+    margin: 0 auto !important;
+    padding: 0 !important;
+}
+
+.badge {
+    margin-bottom: 15px !important;
+}
+
+/* SEARCH BAR */
+.hero-search {
+    margin: 0 auto !important;
+    max-width: 700px;
+}
+
+/* BANNER KO SEARCH KE JUST NEECHE LAO */
+.fashion-banner {
+    margin: 15px auto 25px !important;
+    padding: 0 !important;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+/* BANNER KA SIZE AUR CENTER */
+.fashion-banner img {
+    display: block;
+    width: 260px;
+    max-width: 90%;
+    height: auto;
+    margin: 0 auto;
+    object-fit: contain;
+}
+
+/* MOBILE */
+@media (max-width: 600px) {
+    .hero {
+        padding-top: 25px !important;
+        padding-bottom: 10px !important;
+    }
+
+    .fashion-banner {
+        margin-top: 12px !important;
+    }
+
+    .fashion-banner img {
+        width: 220px;
+    }
+}
+
+.fashion-banner {
+    width: 100%;
+    margin: 10px auto 20px !important;
+    padding: 0 !important;
+    display: flex;
+    justify-content: center;
+}
+
+.fashion-banner img {
+    width: 180px !important;
+    max-width: 180px !important;
+    height: auto !important;
+    display: block;
+    margin: 0 auto !important;
+    object-fit: contain;
+}
+
+@media (max-width: 600px) {
+    .fashion-banner img {
+        width: 160px !important;
+        max-width: 160px !important;
+    }
+}
+
+/* BANNER AUR FEATURED DEALS KA GAP KAM */
+.fashion-banner {
+    margin-bottom: 5px !important;
+    padding-bottom: 0 !important;
+}
+
+#deals {
+    margin-top: 0 !important;
+    padding-top: 5px !important;
+}
+
+#deals .section-title {
+    margin-top: 0 !important;
+    margin-bottom: 15px !important;
+}
+
+/* EXTRA CONTAINER SPACE HATAO */
+#deals .container {
+    padding-top: 0 !important;
+}
+
+.fashion-banner {
+    width: 100%;
+    margin: 5px auto !important;
+    padding: 0 !important;
+    display: flex;
+    justify-content: center;
+}
+
+.fashion-banner img {
+    width: 180px !important;
+    max-width: 180px !important;
+    height: auto !important;
+    display: block;
+    object-fit: contain;
+}
+
+/* TWO BANNERS SIDE BY SIDE */
+.fashion-banners {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 18px;
+    width: 100%;
+    margin: 10px auto 5px;
+    padding: 0 12px;
+    box-sizing: border-box;
+}
+
+.fashion-banner {
+    width: 180px;
+    flex: 0 1 180px;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.fashion-banner img {
+    display: block;
+    width: 100% !important;
+    height: auto !important;
+    max-width: 100% !important;
+    object-fit: contain;
+}
+
+/* MOBILE */
+@media (max-width: 600px) {
+    .fashion-banners {
+        gap: 10px;
+    }
+
+    .fashion-banner {
+        width: 45%;
+        flex: 0 1 45%;
+    }
+}
+
+/* DONO BANNERS SAME SIZE + CLOSE */
+.fashion-banners {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: flex-start !important;
+    gap: 5px !important;
+    width: 100% !important;
+    margin: 10px auto 5px !important;
+    padding: 0 !important;
+}
+
+.fashion-banner {
+    width: 180px !important;
+    height: 288px !important;
+    flex: 0 0 180px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden;
+}
+
+.fashion-banner img {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: fill !important;
+    margin: 0 !important;
+}
+
+/* MOBILE */
+@media (max-width: 600px) {
+    .fashion-banners {
+        gap: 4px !important;
+    }
+
+    .fashion-banner {
+        width:  min(44vw, 180px) !important;
+        height: auto !important;
+        flex: 0 1 min(44vw, 180px) !important;
+        aspect-ratio: 5 / 8;
+    }
+
+    .fashion-banner img {
+        height: 100% !important;
+    }
+}
+
+.fashion-banners {
+    gap: 0px !important;
+    column-gap: 0px !important;
+}
+
+.fashion-banner {
+    margin: 0 !important;
+}
+
+/* TWO BANNERS SIDE BY SIDE */
+
+.fashion-banners {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: flex-start !important;
+    gap: 0px !important;
+
+    width: 100%;
+    margin: 10px auto 5px !important;
+    padding: 0 !important;
+}
+
+/* EACH BANNER */
+
+.fashion-banner {
+    display: block;
+    width: 180px !important;
+    height: 288px !important;
+    flex: 0 0 180px !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    overflow: hidden;
+    border-radius: 10px;
+    cursor: pointer;
+    text-decoration: none;
+
+    transition: transform 0.2s ease;
+}
+
+/* BANNER IMAGE */
+
+.fashion-banner img {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+
+    object-fit: cover;
+    margin: 0 !important;
+}
+
+/* HOVER EFFECT */
+
+.fashion-banner:hover {
+    transform: scale(1.01);
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    .fashion-banners {
+        gap: 0px !important;
+    }
+
+    .fashion-banner {
+        width: 44vw !important;
+        height: auto !important;
+        aspect-ratio: 5 / 8;
+        flex: 0 1 44vw !important;
+    }
+
+}

@@ -477,16 +477,18 @@
     <!-- BACK -->
 
     <a
-        href="index.html"
-        class="back-link"
-    >
-        ← Home / Search
-    </a>
+    href="#"
+    class="back-link"
+    id="backLink"
+>
+    ← Back
+</a>
 
 
     <!-- SEARCH -->
 
     <div class="search-top">
+        <div class="search-top" id="searchTop"></div>
 
         <div class="suggestions">
 
@@ -580,6 +582,11 @@ const resultCount =
 
 const suggestionList =
     document.getElementById("suggestionList");
+
+    document.getElementById("backLink").addEventListener("click", function(event) {
+    event.preventDefault();
+    window.history.back();
+});
 
 
 /* =====================================================
@@ -678,6 +685,24 @@ const SEARCH_GROUPS = {
         "jackets",
         "hoodie",
         "hoodies"
+    ],
+
+    jewellery: [
+       "jewellery",
+       "jewelry",
+       "jewel",
+       "necklace",
+       "necklaces",
+       "earring",
+       "earrings",
+       "bracelet",
+       "bracelets",
+       "bangle",
+       "bangles",
+       "ring",
+       "rings",
+       "pendant",
+       "pendants"
     ],
 
     computer: [
@@ -874,6 +899,10 @@ function productMatchesGroup(deal, group) {
         return descriptionMatch;
     }
 
+    if (group === "jewellery") {
+    return descriptionMatch;
+    }
+
 
     /* -----------------------------------------------
        COMPUTER
@@ -946,91 +975,63 @@ function normalSearch(deal, query) {
 
 function searchProducts() {
 
-    const originalQuery =
-        searchInput.value.trim();
+    // CATEGORY PAGE
+    if (isCategoryLanding && landingGroup) {
 
-    const query =
-        normalizeText(originalQuery);
+        const results = allDeals.filter(deal =>
+            productMatchesGroup(deal, landingGroup)
+        );
 
-
-    /* -----------------------------------------------
-       EMPTY SEARCH
-    ------------------------------------------------ */
-
-    if (!query) {
+        const headingNames = {
+            clothing: "Fashion",
+            jewellery: "Jewellery"
+        };
 
         searchTitle.textContent =
-            "All Products";
+            headingNames[landingGroup] || "Products";
+
+        resultCount.textContent =
+            `${results.length} products available`;
+
+        displayProducts(results);
+        return;
+    }
+
+    const originalQuery = searchInput.value.trim();
+    const query = normalizeText(originalQuery);
+
+    if (!query) {
+        searchTitle.textContent = "All Products";
 
         resultCount.textContent =
             `${allDeals.length} products available`;
 
         displayProducts(allDeals);
-
         return;
     }
-
-
-    /* -----------------------------------------------
-       TITLE
-    ------------------------------------------------ */
 
     searchTitle.textContent =
         `Search Results for "${originalQuery}"`;
 
-
-    /* -----------------------------------------------
-       CATEGORY GROUP
-    ------------------------------------------------ */
-
-    const group =
-        getSearchGroup(query);
-
+    const group = getSearchGroup(query);
 
     let results = [];
 
-
-    /* -----------------------------------------------
-       CATEGORY SEARCH
-    ------------------------------------------------ */
-
     if (group) {
-
-        results =
-            allDeals.filter(deal =>
-                productMatchesGroup(deal, group)
-            );
-
+        results = allDeals.filter(deal =>
+            productMatchesGroup(deal, group)
+        );
+    } else {
+        results = allDeals.filter(deal =>
+            normalSearch(deal, query)
+        );
     }
-
-
-    /* -----------------------------------------------
-       NORMAL SEARCH
-       Only when no category group exists
-    ------------------------------------------------ */
-
-    else {
-
-        results =
-            allDeals.filter(deal =>
-                normalSearch(deal, query)
-            );
-
-    }
-
-
-    /* -----------------------------------------------
-       RESULT COUNT
-    ------------------------------------------------ */
 
     resultCount.textContent =
         `${results.length} products found`;
 
-
     displayProducts(results);
-
 }
-
 
 /* =====================================================
    DISPLAY PRODUCTS
@@ -1433,21 +1434,28 @@ searchInput.addEventListener(
    URL QUERY
 ===================================================== */
 
-const urlParams =
-    new URLSearchParams(
-        window.location.search
-    );
+const urlParams = new URLSearchParams(
+    window.location.search
+);
 
+const initialQuery = urlParams.get("q") || "";
 
-const initialQuery =
-    urlParams.get("q");
+const landingName = normalizeText(initialQuery);
 
+const isCategoryLanding = [
+    "fashion",
+    "clothing",
+    "jewellery",
+    "jewelry"
+].includes(landingName);
 
-if (initialQuery) {
+const landingGroup = getSearchGroup(initialQuery);
 
-    searchInput.value =
-        initialQuery;
-
+if (isCategoryLanding) {
+    searchInput.value = "";
+    document.getElementById("searchTop").style.display = "none";
+} else {
+    searchInput.value = initialQuery;
 }
 
 
