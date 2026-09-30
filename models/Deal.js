@@ -65,6 +65,30 @@ const dealSchema = new mongoose.Schema({
         default: ""
     },
 
+    priceHistory: {
+        type: [
+            {
+                originalPrice: {
+                    type: Number,
+                    required: true
+                },
+                dealPrice: {
+                    type: Number,
+                    required: true
+                },
+                recordedAt: {
+                    type: Date,
+                    default: Date.now
+                },
+                source: {
+                    type: String,
+                    default: "manual"
+                }
+            }
+        ],
+        default: []
+    },
+
     createdAt: {
         type: Date,
         default: Date.now
