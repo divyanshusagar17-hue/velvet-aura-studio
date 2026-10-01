@@ -1,14 +1,22 @@
 
-const cors = require("cors");
-const bcrypt = require("bcrypt");
-const User = require("./models/User");
-const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 const express = require("express");
+const cors = require("cors");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
+
+const User = require("./models/User");
 const Deal = require("./models/Deal");
 
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+
+const PORT = process.env.PORT || 3000;
+const uri = process.env.MONGODB_URI;
 
 // =========================
 // AMAZON CREATORS API
@@ -19,6 +27,14 @@ const AMAZON_TOKEN_URL =
 
 const AMAZON_API_URL =
     "https://creatorsapi.amazon/catalog/v1/getItems";
+
+const ALLOWED_AMAZON_HOSTS = [
+    "amazon.in",
+    "www.amazon.in",
+    "link.amazon",
+    "amzn.to",
+    "amzn.in"
+];
 
 let amazonToken = null;
 let amazonTokenExpiresAt = 0;
@@ -33,6 +49,7 @@ async function getAmazonAccessToken() {
 
     const clientId =
         process.env.CREATORS_API_CREDENTIAL_ID;
+
     const clientSecret =
         process.env.CREATORS_API_CREDENTIAL_SECRET;
 
@@ -65,28 +82,74 @@ async function getAmazonAccessToken() {
     }
 
     amazonToken = data.access_token;
+
     amazonTokenExpiresAt =
-        Date.now() + (data.expires_in - 60) * 1000;
+        Date.now() +
+        Math.max(
+            0,
+            (Number(data.expires_in) || 3600) - 60
+        ) * 1000;
 
     return amazonToken;
 }
 
-function extractAmazonASIN(url) {
-    const match = String(url).match(
-        /\/(?:dp|gp\/product|商品\/[^/]+)\/([A-Z0-9]{10})/i
+function extractAmazonASIN(urlPath) {
+    const match = String(urlPath).match(
+        /\/(?:dp|gp\/product)\/([A-Z0-9]{10})(?:\/|$)/i
     );
 
     return match ? match[1].toUpperCase() : null;
 }
 
-const app = express();
+// Follow short-link redirects, checking every destination.
+async function resolveAmazonShortLink(startUrl) {
+    let currentUrl = new URL(startUrl);
 
-app.use(cors());
-app.use(express.json());
+    for (let i = 0; i < 6; i++) {
+        const hostname = currentUrl.hostname.toLowerCase();
 
-const PORT = process.env.PORT || 3000;
-const uri = process.env.MONGODB_URI;
+        if (
+            currentUrl.protocol !== "https:" ||
+            !ALLOWED_AMAZON_HOSTS.includes(hostname)
+        ) {
+            throw new Error(
+                "Redirected to an unsupported URL"
+            );
+        }
 
+        if (
+            hostname === "amazon.in" ||
+            hostname === "www.amazon.in"
+        ) {
+            return currentUrl;
+        }
+
+        const response = await fetch(currentUrl, {
+            method: "GET",
+            redirect: "manual"
+        });
+
+        const location = response.headers.get("location");
+
+        if (response.body) {
+            await response.body.cancel();
+        }
+
+        if (
+            response.status < 300 ||
+            response.status >= 400 ||
+            !location
+        ) {
+            throw new Error(
+                "Could not resolve the Amazon short link"
+            );
+        }
+
+        currentUrl = new URL(location, currentUrl);
+    }
+
+    throw new Error("Too many redirects");
+}
 
 // =========================
 // MONGODB CONNECTION
@@ -95,13 +158,11 @@ const uri = process.env.MONGODB_URI;
 mongoose
     .connect(uri)
     .then(() => {
-        console.log("✅ MongoDB Connected");
+        console.log("MongoDB Connected");
     })
     .catch((err) => {
-        console.log("❌ MongoDB Error:");
-        console.log(err);
+        console.log("MongoDB Error:", err);
     });
-
 
 // =========================
 // BASIC ROUTES
@@ -117,7 +178,6 @@ app.get("/api/test", (req, res) => {
     });
 });
 
-
 // =========================
 // REGISTER
 // =========================
@@ -128,16 +188,25 @@ app.get("/register", (req, res) => {
 
 app.post("/register", async (req, res) => {
     try {
+        const { fullName, email, password, role } = req.body;
+
+        if (!fullName || !email || !password) {
+            return res.status(400).json({
+                success: false,
+                message: "Name, email and password are required"
+            });
+        }
+
         const hashedPassword = await bcrypt.hash(
-            req.body.password,
+            password,
             10
         );
 
         const user = new User({
-            fullName: req.body.fullName,
-            email: req.body.email,
+            fullName,
+            email,
             password: hashedPassword,
-            role: req.body.role
+            role
         });
 
         await user.save();
@@ -146,9 +215,8 @@ app.post("/register", async (req, res) => {
             success: true,
             message: "User Saved Successfully"
         });
-
     } catch (err) {
-        console.log(err);
+        console.log("REGISTER ERROR:", err);
 
         res.status(500).json({
             success: false,
@@ -156,7 +224,6 @@ app.post("/register", async (req, res) => {
         });
     }
 });
-
 
 // =========================
 // LOGIN
@@ -187,6 +254,10 @@ app.post("/login", async (req, res) => {
             });
         }
 
+        if (!process.env.JWT_SECRET) {
+            throw new Error("JWT_SECRET is missing");
+        }
+
         const token = jwt.sign(
             {
                 id: user._id,
@@ -203,9 +274,8 @@ app.post("/login", async (req, res) => {
             message: "Login Successful",
             token
         });
-
     } catch (err) {
-        console.log(err);
+        console.log("LOGIN ERROR:", err);
 
         res.status(500).json({
             success: false,
@@ -214,6 +284,9 @@ app.post("/login", async (req, res) => {
     }
 });
 
+// =========================
+// AMAZON PRODUCT LOOKUP
+// =========================
 
 app.post("/api/amazon/product", async (req, res) => {
     try {
@@ -238,18 +311,35 @@ app.post("/api/amazon/product", async (req, res) => {
         }
 
         if (
-            !["amazon.in", "www.amazon.in"].includes(
+            parsedUrl.protocol !== "https:" ||
+            !ALLOWED_AMAZON_HOSTS.includes(
                 parsedUrl.hostname.toLowerCase()
             )
         ) {
             return res.status(400).json({
                 success: false,
-                message: "Please enter an Amazon India URL"
+                message: "Please enter a valid Amazon link"
+            });
+        }
+
+        let finalUrl;
+
+        try {
+            finalUrl = await resolveAmazonShortLink(
+                parsedUrl.toString()
+            );
+        } catch (err) {
+            console.log("AMAZON LINK ERROR:", err.message);
+
+            return res.status(400).json({
+                success: false,
+                message:
+                    "Could not open this short link. Try an Amazon.in product link."
             });
         }
 
         const asin = extractAmazonASIN(
-            parsedUrl.pathname
+            finalUrl.pathname
         );
 
         if (!asin) {
@@ -274,7 +364,7 @@ app.post("/api/amazon/product", async (req, res) => {
         const response = await fetch(AMAZON_API_URL, {
             method: "POST",
             headers: {
-                "Authorization": `Bearer ${token}`,
+                Authorization: `Bearer ${token}`,
                 "Content-Type": "application/json",
                 "x-marketplace": "www.amazon.in"
             },
@@ -282,7 +372,7 @@ app.post("/api/amazon/product", async (req, res) => {
                 itemIds: [asin],
                 itemIdType: "ASIN",
                 marketplace: "www.amazon.in",
-                partnerTag: partnerTag,
+                partnerTag,
                 resources: [
                     "images.primary.large",
                     "itemInfo.title",
@@ -297,7 +387,7 @@ app.post("/api/amazon/product", async (req, res) => {
         if (!response.ok) {
             console.log("Amazon API error:", data);
 
-            return res.status(response.status).json({
+            return res.status(502).json({
                 success: false,
                 message: "Amazon product lookup failed"
             });
@@ -330,12 +420,12 @@ app.post("/api/amazon/product", async (req, res) => {
             product: {
                 asin: item.asin || asin,
                 productName: title,
-                image: image,
+                image,
                 description: features.join("\n"),
-                affiliateUrl: item.detailPageURL || ""
+                affiliateUrl:
+                    item.detailPageURL || productUrl
             }
         });
-
     } catch (err) {
         console.log("AMAZON LOOKUP ERROR:", err);
 
@@ -352,7 +442,6 @@ app.post("/api/amazon/product", async (req, res) => {
 
 app.post("/api/deals", async (req, res) => {
     try {
-        // Multiple images
         let images = [];
 
         if (Array.isArray(req.body.images)) {
@@ -361,21 +450,12 @@ app.post("/api/deals", async (req, res) => {
                 .filter(Boolean);
         }
 
-        // Old frontend compatibility
-        if (
-            images.length === 0 &&
-            req.body.image
-        ) {
-            images = [
-                String(req.body.image).trim()
-            ];
+        if (images.length === 0 && req.body.image) {
+            images = [String(req.body.image).trim()];
         }
 
-        // First image for old frontend
         const firstImage = images[0] || "";
 
-
-        // Tags
         let tags = [];
 
         if (Array.isArray(req.body.tags)) {
@@ -386,14 +466,12 @@ app.post("/api/deals", async (req, res) => {
                 .filter(Boolean);
         }
 
-
-        // Create deal
         const deal = new Deal({
             productName: req.body.productName,
             description: req.body.description,
 
             image: firstImage,
-            images: images,
+            images,
 
             originalPrice: Number(req.body.originalPrice),
             dealPrice: Number(req.body.dealPrice),
@@ -403,22 +481,19 @@ app.post("/api/deals", async (req, res) => {
             affiliateUrl: req.body.affiliateUrl,
 
             category: req.body.category || "Other",
-            tags: tags,
+            tags,
 
             amazonProductId:
                 req.body.amazonProductId || ""
         });
 
-
         await deal.save();
-
 
         res.status(201).json({
             success: true,
             message: "Deal Saved Successfully",
-            deal: deal
+            deal
         });
-
     } catch (err) {
         console.log("ADD DEAL ERROR:", err);
 
@@ -429,23 +504,20 @@ app.post("/api/deals", async (req, res) => {
     }
 });
 
-
 // =========================
 // GET ALL DEALS
 // =========================
 
 app.get("/api/deals", async (req, res) => {
     try {
-        const deals = await Deal.find()
-            .sort({
-                _id: -1
-            });
+        const deals = await Deal.find().sort({
+            _id: -1
+        });
 
         res.json({
             success: true,
-            deals: deals
+            deals
         });
-
     } catch (err) {
         console.log("GET DEALS ERROR:", err);
 
@@ -456,14 +528,12 @@ app.get("/api/deals", async (req, res) => {
     }
 });
 
-
 // =========================
 // EDIT / UPDATE DEAL
 // =========================
 
 app.put("/api/deals/:id", async (req, res) => {
     try {
-        // Multiple images
         let images = [];
 
         if (Array.isArray(req.body.images)) {
@@ -472,20 +542,12 @@ app.put("/api/deals/:id", async (req, res) => {
                 .filter(Boolean);
         }
 
-        // Old product compatibility
-        if (
-            images.length === 0 &&
-            req.body.image
-        ) {
-            images = [
-                String(req.body.image).trim()
-            ];
+        if (images.length === 0 && req.body.image) {
+            images = [String(req.body.image).trim()];
         }
 
         const firstImage = images[0] || "";
 
-
-        // Tags
         let tags = [];
 
         if (Array.isArray(req.body.tags)) {
@@ -496,8 +558,6 @@ app.put("/api/deals/:id", async (req, res) => {
                 .filter(Boolean);
         }
 
-
-        // Find existing deal
         const existingDeal = await Deal.findById(
             req.params.id
         );
@@ -509,8 +569,6 @@ app.put("/api/deals/:id", async (req, res) => {
             });
         }
 
-
-        // Convert incoming prices
         const newOriginalPrice = Number(
             req.body.originalPrice
         );
@@ -523,8 +581,6 @@ app.put("/api/deals/:id", async (req, res) => {
             req.body.discount
         );
 
-
-        // Validate numeric values
         if (
             !Number.isFinite(newOriginalPrice) ||
             !Number.isFinite(newDealPrice) ||
@@ -536,14 +592,10 @@ app.put("/api/deals/:id", async (req, res) => {
             });
         }
 
-
-        // Check whether price changed
         const priceChanged =
             existingDeal.originalPrice !== newOriginalPrice ||
             existingDeal.dealPrice !== newDealPrice;
 
-
-        // Save baseline if history is empty
         if (
             !existingDeal.priceHistory ||
             existingDeal.priceHistory.length === 0
@@ -559,8 +611,6 @@ app.put("/api/deals/:id", async (req, res) => {
             });
         }
 
-
-        // Add new history entry only if price changed
         if (priceChanged) {
             existingDeal.priceHistory.push({
                 originalPrice: newOriginalPrice,
@@ -570,8 +620,6 @@ app.put("/api/deals/:id", async (req, res) => {
             });
         }
 
-
-        // Update deal details
         existingDeal.productName = req.body.productName;
         existingDeal.description = req.body.description;
 
@@ -593,17 +641,13 @@ app.put("/api/deals/:id", async (req, res) => {
         existingDeal.amazonProductId =
             req.body.amazonProductId || "";
 
-
-        // Save updated deal and price history
         const updatedDeal = await existingDeal.save();
-
 
         res.json({
             success: true,
             message: "Deal Updated Successfully",
             deal: updatedDeal
         });
-
     } catch (err) {
         console.log("UPDATE DEAL ERROR:", err);
 
@@ -614,7 +658,6 @@ app.put("/api/deals/:id", async (req, res) => {
     }
 });
 
-
 // =========================
 // DELETE DEAL
 // =========================
@@ -622,9 +665,7 @@ app.put("/api/deals/:id", async (req, res) => {
 app.delete("/api/deals/:id", async (req, res) => {
     try {
         const deletedDeal =
-            await Deal.findByIdAndDelete(
-                req.params.id
-            );
+            await Deal.findByIdAndDelete(req.params.id);
 
         if (!deletedDeal) {
             return res.status(404).json({
@@ -637,7 +678,6 @@ app.delete("/api/deals/:id", async (req, res) => {
             success: true,
             message: "Deal deleted successfully"
         });
-
     } catch (err) {
         console.log("DELETE DEAL ERROR:", err);
 
@@ -648,13 +688,10 @@ app.delete("/api/deals/:id", async (req, res) => {
     }
 });
 
-
 // =========================
 // START SERVER
 // =========================
 
 app.listen(PORT, () => {
-    console.log(
-        `Server running at http://localhost:${PORT}`
-    );
+    console.log(`Server running on port ${PORT}`);
 });
