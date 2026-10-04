@@ -402,23 +402,31 @@
     <form id="dealForm">
       <div class="form-grid">
 
-        <!-- AMAZON PRODUCT URL -->
-        <div class="form-group full">
-          <label for="amazonProductUrl">Amazon Product URL</label>
-          <input
-            type="url"
-            id="amazonProductUrl"
-            placeholder="Paste Amazon.in product link"
-          >
-          <button
-            type="button"
-            class="add-deal-btn"
-            id="fetchAmazonBtn"
-          >Fetch Amazon Details</button>
-          <span class="image-help" id="amazonMessage" aria-live="polite">
-            Amazon.in link paste karo, phir Fetch button dabao.
-          </span>
-        </div>
+      
+
+        <!-- AMAZON AFFILIATE LINK AUTO-FILL -->
+<div class="form-group full">
+  <label for="affiliateUrl">Amazon Affiliate Link</label>
+
+  <input
+    type="url"
+    id="affiliateUrl"
+    placeholder="https://link.amazon/XXXXXXXX"
+    required
+  >
+
+  <button
+    type="button"
+    class="add-deal-btn"
+    id="autoFillAmazonBtn"
+  >
+    ⚡ Auto Fill Product
+  </button>
+
+  <span class="image-help" id="amazonMessage" aria-live="polite">
+    Sirf Amazon affiliate link paste karo.
+  </span>
+</div>
 
         <!-- PRODUCT NAME -->
         <div class="form-group">
@@ -598,10 +606,10 @@
   const categoryInput = document.getElementById("category");
   const categoryOptions = document.getElementById("categoryOptions");
 
-  // AMAZON ELEMENTS
-  const amazonProductUrl = document.getElementById("amazonProductUrl");
-  const fetchAmazonBtn = document.getElementById("fetchAmazonBtn");
-  const amazonMessage = document.getElementById("amazonMessage");
+  // AMAZON AUTO-FILL ELEMENTS
+ const affiliateUrl = document.getElementById("affiliateUrl");
+ const autoFillAmazonBtn = document.getElementById("autoFillAmazonBtn");
+ const amazonMessage = document.getElementById("amazonMessage");
 
   // EDIT STATE
   let editingDealId = null;
@@ -665,77 +673,106 @@
     }
   });
 
-  // AMAZON PRODUCT AUTO-FILL
-  fetchAmazonBtn.addEventListener("click", async () => {
-    const url = amazonProductUrl.value.trim();
+  // AMAZON AFFILIATE LINK AUTO-FILL
+ autoFillAmazonBtn.addEventListener("click", async () => {
+  const url = affiliateUrl.value.trim();
 
-    if (!url) {
-      amazonMessage.textContent =
-        "Pehle Amazon.in product URL paste karo.";
-      return;
-    }
-
-    fetchAmazonBtn.disabled = true;
-    fetchAmazonBtn.textContent = "Fetching...";
+  if (!url) {
     amazonMessage.textContent =
-      "Amazon se product details la rahe hain...";
+      "❌ Pehle Amazon affiliate link paste karo.";
+    return;
+  }
 
-    try {
-      const response = await fetch(
-        API_URL + "/api/amazon/product",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ url })
-        }
+  autoFillAmazonBtn.disabled = true;
+  autoFillAmazonBtn.textContent = "Fetching...";
+  amazonMessage.textContent =
+    "Amazon se product details la rahe hain...";
+
+  try {
+    const response = await fetch(
+      API_URL + "/api/amazon/auto-fill",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ url })
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      throw new Error(
+        data.message || "Product details fetch nahi hui."
       );
-
-      const data = await response.json();
-
-      if (!response.ok || !data.success) {
-        throw new Error(
-          data.message || "Product details fetch nahi hui."
-        );
-      }
-
-      const product = data.product || {};
-
-      if (product.productName) {
-        document.getElementById("productName").value =
-          product.productName;
-      }
-
-      if (product.description) {
-        document.getElementById("description").value =
-          product.description;
-      }
-
-      if (product.image) {
-        document.getElementById("image1").value =
-          product.image;
-      }
-
-      if (product.affiliateUrl) {
-        document.getElementById("affiliateUrl").value =
-          product.affiliateUrl;
-      }
-
-      document.getElementById("store").value = "Amazon";
-
-      amazonMessage.textContent =
-        "✅ Details fill ho gayi! Prices, category aur tags check karke bhar do.";
-
-    } catch (error) {
-      console.error("Amazon fetch error:", error);
-      amazonMessage.textContent =
-        "❌ " + (error.message || "Fetch failed. Backend check karo.");
-    } finally {
-      fetchAmazonBtn.disabled = false;
-      fetchAmazonBtn.textContent = "Fetch Amazon Details";
     }
-  });
+
+    const product = data.product || {};
+
+    document.getElementById("productName").value =
+      product.productName || "";
+
+    document.getElementById("description").value =
+      product.description || "";
+
+    document.getElementById("category").value =
+      product.category || "Other";
+
+    document.getElementById("image1").value =
+      product.images?.[0] || "";
+
+    document.getElementById("image2").value =
+      product.images?.[1] || "";
+
+    document.getElementById("image3").value =
+      product.images?.[2] || "";
+
+    document.getElementById("image4").value =
+      product.images?.[3] || "";
+
+    document.getElementById("image5").value =
+      product.images?.[4] || "";
+
+    document.getElementById("image6").value =
+      product.images?.[5] || "";
+
+    document.getElementById("image7").value =
+      product.images?.[6] || "";
+
+    document.getElementById("originalPrice").value =
+      product.originalPrice || "";
+
+    document.getElementById("dealPrice").value =
+      product.dealPrice || "";
+
+    document.getElementById("discount").value =
+      product.discount || "";
+
+    document.getElementById("store").value =
+      "Amazon";
+
+    document.getElementById("tags").value =
+      Array.isArray(product.tags)
+        ? product.tags.join(", ")
+        : "";
+
+    // Original affiliate link ko same rakho
+    affiliateUrl.value = url;
+
+    amazonMessage.textContent =
+      "✅ Product details automatically fill ho gayi!";
+  } catch (error) {
+    console.error("Amazon auto-fill error:", error);
+
+    amazonMessage.textContent =
+      "❌ " + (error.message || "Auto-fill failed.");
+  } finally {
+    autoFillAmazonBtn.disabled = false;
+    autoFillAmazonBtn.textContent =
+      "⚡ Auto Fill Product";
+  }
+});
 
   // ADD / UPDATE DEAL
   form.addEventListener("submit", async event => {

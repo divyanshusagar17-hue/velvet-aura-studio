@@ -285,6 +285,139 @@ app.post("/login", async (req, res) => {
 });
 
 // =========================
+// AMAZON AFFILIATE AUTO-FILL
+// =========================
+
+app.post("/api/amazon/auto-fill", async (req, res) => {
+    try {
+        const affiliateUrl = String(req.body.url || "").trim();
+
+        if (!affiliateUrl) {
+            return res.status(400).json({
+                success: false,
+                message: "Amazon affiliate link is required"
+            });
+        }
+
+        const inputUrl = new URL(affiliateUrl);
+
+        const allowedHosts = [
+            "link.amazon",
+            "amzn.to",
+            "amzn.in",
+            "amazon.in",
+            "www.amazon.in"
+        ];
+
+        if (
+            inputUrl.protocol !== "https:" ||
+            !allowedHosts.includes(inputUrl.hostname.toLowerCase())
+        ) {
+            return res.status(400).json({
+                success: false,
+                message: "Please enter a valid Amazon affiliate link"
+            });
+        }
+
+        // Short affiliate link ko Amazon product page tak follow karo
+        const response = await fetch(affiliateUrl, {
+            method: "GET",
+            redirect: "follow"
+        });
+
+        const finalUrl = new URL(response.url);
+
+        if (
+            !["amazon.in", "www.amazon.in"].includes(
+                finalUrl.hostname.toLowerCase()
+            )
+        ) {
+            return res.status(400).json({
+                success: false,
+                message: "Amazon product link resolve nahi hua"
+            });
+        }
+
+        // Amazon product URL se ASIN nikalo
+        const asinMatch = finalUrl.pathname.match(
+            /\/(?:dp|gp\/product)\/([A-Z0-9]{10})(?:\/|$)/i
+        );
+
+        if (!asinMatch) {
+            return res.status(400).json({
+                success: false,
+                message: "Product ASIN nahi mila"
+            });
+        }
+
+        const asin = asinMatch[1].toUpperCase();
+
+        // Amazon product page HTML read karo
+        const html = await response.text();
+
+        function getMeta(property) {
+            const regex = new RegExp(
+                `<meta[^>]+(?:property|name)=["']${property}["'][^>]+content=["']([^"']+)["']`,
+                "i"
+            );
+
+            const match = html.match(regex);
+            return match ? match[1].trim() : "";
+        }
+
+        function cleanText(value) {
+            return String(value || "")
+                .replace(/&amp;/g, "&")
+                .replace(/&quot;/g, '"')
+                .replace(/&#39;/g, "'")
+                .replace(/&lt;/g, "<")
+                .replace(/&gt;/g, ">")
+                .trim();
+        }
+
+        const productName = cleanText(
+            getMeta("og:title")
+        );
+
+        const image = cleanText(
+            getMeta("og:image")
+        );
+
+        const description = cleanText(
+            getMeta("og:description")
+        );
+
+        // Original affiliate link ko hi preserve karo
+        res.json({
+            success: true,
+            product: {
+                asin,
+                productName,
+                description,
+                images: image ? [image] : [],
+                originalPrice: "",
+                dealPrice: "",
+                discount: "",
+                category: "Other",
+                tags: ["amazon"],
+                affiliateUrl
+            }
+        });
+
+    } catch (error) {
+        console.log(
+            "AMAZON AUTO-FILL ERROR:",
+            error
+        );
+
+        res.status(500).json({
+            success: false,
+            message: "Amazon product data fetch nahi ho paya"
+        });
+    }
+});
+
+// =========================
 // AMAZON PRODUCT LOOKUP
 // =========================
 
