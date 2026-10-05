@@ -320,12 +320,15 @@ app.post("/api/amazon/auto-fill", async (req, res) => {
         }
 
         // Short affiliate link ko Amazon product page tak follow karo
+        console.log("AMAZON AUTO-FILL INPUT:", affiliateUrl);
         const response = await fetch(affiliateUrl, {
             method: "GET",
             redirect: "follow"
         });
 
         const finalUrl = new URL(response.url);
+        console.log("AMAZON AUTO-FILL FINAL URL:", response.url);
+        console.log("AMAZON RESPONSE STATUS:", response.status);
 
         if (
             !["amazon.in", "www.amazon.in"].includes(
