@@ -545,7 +545,7 @@ const words = productName
                 asin,
                 productName,
                 description,
-                images: image ? [image] : [],
+                images: images,
                 originalPrice: "",
                 dealPrice: "",
                 discount: "",
