@@ -358,37 +358,185 @@ app.post("/api/amazon/auto-fill", async (req, res) => {
         // Amazon product page HTML read karo
         const html = await response.text();
 
-        function getMeta(property) {
-            const regex = new RegExp(
-                `<meta[^>]+(?:property|name)=["']${property}["'][^>]+content=["']([^"']+)["']`,
-                "i"
-            );
+function decodeHTML(value) {
+    return String(value || "")
+        .replace(/&amp;/g, "&")
+        .replace(/&quot;/g, '"')
+        .replace(/&#39;/g, "'")
+        .replace(/&lt;/g, "<")
+        .replace(/&gt;/g, ">")
+        .replace(/&#x27;/gi, "'")
+        .trim();
+}
 
-            const match = html.match(regex);
-            return match ? match[1].trim() : "";
+function getMetaContent(key) {
+    const tags = html.match(/<meta\b[^>]*>/gi) || [];
+
+    for (const tag of tags) {
+        const keyMatch = tag.match(
+            /\b(?:property|name)\s*=\s*["']([^"']+)["']/i
+        );
+
+        const contentMatch = tag.match(
+            /\bcontent\s*=\s*["']([^"']*)["']/i
+        );
+
+        if (
+            keyMatch &&
+            contentMatch &&
+            keyMatch[1].toLowerCase() === key.toLowerCase()
+        ) {
+            return decodeHTML(contentMatch[1]);
         }
+    }
 
-        function cleanText(value) {
-            return String(value || "")
-                .replace(/&amp;/g, "&")
+    return "";
+}
+
+function getFirstMatch(regex) {
+    const match = html.match(regex);
+    return match ? decodeHTML(match[1]) : "";
+}
+
+// PRODUCT NAME
+let productName =
+    getMetaContent("og:title") ||
+    getFirstMatch(/<title[^>]*>([\s\S]*?)<\/title>/i);
+
+productName = productName
+    .replace(/\s*[-|]\s*Amazon\.in.*$/i, "")
+    .trim();
+
+// DESCRIPTION
+let description =
+    getMetaContent("og:description") ||
+    getFirstMatch(
+        /<div[^>]+id=["']feature-bullets["'][^>]*>([\s\S]*?)<\/div>/i
+    );
+
+description = description
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+// MAIN IMAGE
+let mainImage = getMetaContent("og:image");
+
+// EXTRA IMAGES
+let images = [];
+
+if (mainImage) {
+    images.push(mainImage);
+}
+
+const dynamicImageMatch = html.match(
+    /data-a-dynamic-image=["']([^"']+)["']/i
+);
+
+if (dynamicImageMatch) {
+    try {
+        const decoded = decodeHTML(
+            dynamicImageMatch[1]
                 .replace(/&quot;/g, '"')
-                .replace(/&#39;/g, "'")
-                .replace(/&lt;/g, "<")
-                .replace(/&gt;/g, ">")
-                .trim();
-        }
-
-        const productName = cleanText(
-            getMeta("og:title")
         );
 
-        const image = cleanText(
-            getMeta("og:image")
-        );
+        const imageData = JSON.parse(decoded);
 
-        const description = cleanText(
-            getMeta("og:description")
-        );
+        Object.keys(imageData).forEach(imageUrl => {
+            if (!images.includes(imageUrl)) {
+                images.push(imageUrl);
+            }
+        });
+    } catch {
+        // Ignore invalid image JSON
+    }
+}
+
+images = images
+    .filter(Boolean)
+    .slice(0, 7);
+
+// PRICE
+function extractPrice(text) {
+    const match = String(text || "").match(
+        /(?:₹|Rs\.?\s*)\s*([\d,]+(?:\.\d{1,2})?)/
+    );
+
+    if (!match) return 0;
+
+    return Number(
+        match[1].replace(/,/g, "")
+    );
+}
+
+const priceMatches = [
+    ...html.matchAll(
+        /class=["'][^"']*a-offscreen[^"']*["'][^>]*>\s*([^<]+)\s*</gi
+    )
+].map(match => extractPrice(match[1]))
+ .filter(price => price > 0);
+
+const dealPrice = priceMatches[0] || 0;
+
+// ORIGINAL / LIST PRICE
+const originalPriceMatches = [
+    ...html.matchAll(
+        /class=["'][^"']*a-text-price[^"']*["'][\s\S]*?a-offscreen[^>]*>\s*([^<]+)\s*</gi
+    )
+].map(match => extractPrice(match[1]))
+ .filter(price => price > 0);
+
+const originalPrice =
+    originalPriceMatches.find(price => price >= dealPrice) ||
+    dealPrice;
+
+const discount =
+    originalPrice > 0 && dealPrice > 0
+        ? Math.round(
+            ((originalPrice - dealPrice) /
+                originalPrice) * 100
+        )
+        : 0;
+
+// CATEGORY
+let category =
+    getFirstMatch(
+        /id=["']wayfinding-breadcrumbs_feature_div["'][\s\S]*?<\/div>/i
+    );
+
+category = category
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+if (!category) {
+    category = "Other";
+}
+
+// TAGS
+const words = productName
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, " ")
+    .split(/\s+/)
+    .filter(word =>
+        word.length >= 3 &&
+        ![
+            "amazon",
+            "with",
+            "for",
+            "the",
+            "and",
+            "from"
+        ].includes(word)
+    );
+
+         const tags = [...new Set(words)].slice(0, 8);
+
+          console.log("AMAZON PRODUCT NAME:", productName);
+          console.log("AMAZON IMAGES FOUND:", images.length);
+          console.log("AMAZON DEAL PRICE:", dealPrice);
+          console.log("AMAZON ORIGINAL PRICE:", originalPrice);
+          console.log("AMAZON DISCOUNT:", discount);
 
         // Original affiliate link ko hi preserve karo
         res.json({
